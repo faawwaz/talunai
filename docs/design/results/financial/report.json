@@ -1,0 +1,136 @@
+{
+  "chainId": 31337,
+  "isolated": true,
+  "claimId": "ac66649b-fbb5-4fe5-ba7c-bc55973b5549",
+  "results": [
+    {
+      "name": "actual worker evidence -> human verifier review",
+      "status": "PASSED"
+    },
+    {
+      "name": "both exact-term EIP712 approvals through wallet UI",
+      "status": "PASSED"
+    },
+    {
+      "name": "verifier UI registers and confirmed projection advances",
+      "status": "PASSED"
+    },
+    {
+      "name": "lender exact allowance -> atomic principal funding from UI",
+      "status": "PASSED"
+    },
+    {
+      "name": "buyer UI collection 50000000; canonical total 50000000",
+      "status": "PASSED"
+    },
+    {
+      "name": "buyer UI collection 21050000; canonical total 71050000",
+      "status": "PASSED"
+    },
+    {
+      "name": "buyer UI collection 28950000; canonical total 100000000",
+      "status": "PASSED"
+    },
+    {
+      "name": "lender and borrower pull withdrawals via UI; exact final balances",
+      "status": "PASSED"
+    }
+  ],
+  "broadcasts": [
+    {
+      "role": "verifier",
+      "hash": "0x94f07eeded1ce456958323574a68cf8e237aafacffb619e7eab584e01c406d30",
+      "target": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"
+    },
+    {
+      "role": "lender",
+      "hash": "0xc1b85fbb0a53fc52d8729784fe0bd4976d95e9b98775f819df82ce41ea744238",
+      "target": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    },
+    {
+      "role": "lender",
+      "hash": "0x43d557ba51bca3cf32fe5041812b0370dbae89d0bcc7c25a5e7c8655e0344fd3",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x573b98606d9caf644077f75d6d002e97af21e0f785ebd53a3e7af25f6823b1b0",
+      "target": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x06a3d3915c4a91cd5ab908ee79a720421815c70c40fcaca1a50a28d38b6b53ee",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x185aece7ce55d8b2244a5829151bd221cc9b27c39b2f2cbb1e00f5de098647a2",
+      "target": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x2cd409ee7c95f2a874df304822a1b8f3c35e36f4f7c93cc1980f68ee12c078f0",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x97562df643b83a568a366482b66ff3e56191d85f12f7bbb3079e1e32ea067726",
+      "target": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x07be89cdfcb96be617a932ff502ae433087fe5cf5a6889a3e133065ea0f6d0b2",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "lender",
+      "hash": "0x6345daf225990d327e9f1b542bc8128e92cf8bacae45ab9d9e26a2d3e13cf099",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "borrower",
+      "hash": "0x9a1b1bd685d489172f54f9311780ba1741fa80940774b7dc6a63cde88a473862",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    }
+  ],
+  "actual": {
+    "acceptedOutstanding": "100000000",
+    "blockHash": "0x3f8d9b9c0d30f6a1fdf667337622d02e0d08fa7a610e3d5df30c6fa27f0b7f3b",
+    "blockNumber": "43",
+    "borrower": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "borrowerAllocated": "28950000",
+    "borrowerResidualClaimable": "0",
+    "borrowerWithdrawn": "28950000",
+    "buyer": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+    "chainId": 31337,
+    "claimId": "ac66649b-fbb5-4fe5-ba7c-bc55973b5549",
+    "collectionStatus": "FULLY_COLLECTED",
+    "confirmedBlock": "43",
+    "confirmedBlockHash": "0x3f8d9b9c0d30f6a1fdf667337622d02e0d08fa7a610e3d5df30c6fa27f0b7f3b",
+    "feeAllocated": "1050000",
+    "financingOverdue": false,
+    "financingStatus": "REPAID",
+    "fixedFee": "1050000",
+    "fundingHold": false,
+    "hasDispute": false,
+    "indexerDegraded": false,
+    "invoiceOverdue": false,
+    "isSynthetic": true,
+    "lender": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+    "lenderAllocated": "71050000",
+    "lenderClaimable": "0",
+    "lenderOutstanding": "0",
+    "lenderWithdrawn": "71050000",
+    "paymentToken": {
+      "address": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+      "decimals": 0,
+      "symbol": "MockIDR"
+    },
+    "principal": "70000000",
+    "principalAllocated": "70000000",
+    "registryStatus": "FUNDED",
+    "remainingInvoiceCollection": "0",
+    "stateConfidence": "CONFIRMED_PROJECTION",
+    "totalCollected": "100000000"
+  }
+}

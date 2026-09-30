@@ -1,0 +1,48 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "mercury",
+      "url": "https://demo.mercury.com/home",
+      "title": "Mercury | Banking for Startups",
+      "images": []
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "ramp",
+      "url": "https://support.ramp.com/bill-pay-approvals/",
+      "title": "Bill Pay approvals — Ramp Help Center",
+      "images": []
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "linear",
+      "url": "https://linear.app/docs/inbox",
+      "title": "Inbox – Linear Docs",
+      "images": [
+        {
+          "alt": "Linear Inbox in dark mode, showing Priority and Other tabs with several notifications about issue assignments, project updates, comments, and mentions.",
+          "src": "https://webassets.linear.app/images/ornj730p/production/b442b340278740de70919c868dce1afca4335fe7-3600x2080.png?w=1440&q=95&auto=format&dpr=2",
+          "width": 650,
+          "height": 376
+        },
+        {
+          "alt": "Inbox display options",
+          "src": "https://webassets.linear.app/images/ornj730p/production/2decf1f92f20b31e8a917d8e8c8c7e819ea1d8c3-1324x897.png?w=1440&q=95&auto=format&dpr=2",
+          "width": 650,
+          "height": 440
+        },
+        {
+          "alt": "Intervals available when setting reminders",
+          "src": "https://webassets.linear.app/images/ornj730p/production/0481a1b521e5ec58910e3294f94eb984c50517be-1378x755.png?w=1440&q=95&auto=format&dpr=2",
+          "width": 650,
+          "height": 356
+        }
+      ]
+    }
+  }
+]

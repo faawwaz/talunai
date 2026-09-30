@@ -1,0 +1,13 @@
+.env*
+.local/
+.private/
+.agents/
+graft/
+video/
+pitch/
+demo-artifacts/
+coverage/
+contracts/out/
+contracts/cache/
+*.pem
+*.key

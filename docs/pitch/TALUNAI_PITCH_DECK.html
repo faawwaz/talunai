@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TALUNAI — Indonesia Web3 Hackathon 2026</title>
+    <style>
+      :root {
+        --canvas: #f7f8f2;
+        --paper: #fff;
+        --ink: #173b35;
+        --jade: #176653;
+        --sage: #e7efe7;
+        --lime: #d6ed84;
+        --muted: #62716b;
+        --line: #dfe5da;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: #dfe5da; color: var(--ink); font-family: Manrope, "Avenir Next", Arial, sans-serif; }
+      a { color: inherit; text-decoration: none; }
+      .slide {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 1280px;
+        height: 720px;
+        margin: 22px auto;
+        padding: 56px 68px 46px;
+        overflow: hidden;
+        background: var(--canvas);
+        break-after: page;
+      }
+      .slide:last-child { break-after: auto; }
+      .brand { font-size: 25px; font-weight: 800; letter-spacing: -.08em; }
+      .brand-mark { display: inline-grid; width: 25px; height: 25px; margin-right: 5px; place-items: center; border-radius: 50% 0 50% 50%; background: var(--jade); color: var(--canvas); font-size: 15px; letter-spacing: 0; transform: rotate(-20deg); }
+      .topline, .footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+      .topline { margin-bottom: 44px; }
+      .eyebrow { color: var(--jade); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+      .footer { position: absolute; right: 68px; bottom: 32px; left: 68px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+      h1, h2, h3, p { margin: 0; }
+      h1 { font-size: 70px; line-height: 1.07; letter-spacing: -.075em; }
+      h2 { font-size: 48px; line-height: 1.1; letter-spacing: -.065em; }
+      h3 { font-size: 18px; letter-spacing: -.035em; }
+      .lead { color: var(--muted); font-size: 21px; line-height: 1.52; }
+      .small { color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 100px; color: var(--jade); background: var(--paper); font-size: 12px; font-weight: 700; }
+      .dot { width: 7px; height: 7px; border-radius: 50%; background: #36846d; }
+      .hero-grid { display: grid; grid-template-columns: 1.5fr .8fr; gap: 70px; align-items: end; flex: 1; padding-bottom: 52px; }
+      .hero-copy { display: grid; align-content: end; gap: 30px; }
+      .hero-copy .lead { max-width: 620px; }
+      .hero-proof { display: grid; gap: 14px; padding: 28px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+      .hero-proof strong { font-size: 39px; line-height: 1; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+      .hero-proof .proof-row { display: grid; gap: 4px; padding-bottom: 13px; border-bottom: 1px solid var(--line); }
+      .hero-proof .proof-row:last-child { padding: 0; border: 0; }
+      .section-head { display: grid; gap: 14px; max-width: 930px; }
+      .section-head .lead { font-size: 19px; }
+      .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 42px; }
+      .three .tile { min-height: 225px; padding: 26px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+      .tile-index { display: inline-grid; width: 30px; height: 30px; margin-bottom: 32px; place-items: center; border-radius: 8px; background: var(--sage); color: var(--jade); font-size: 13px; font-weight: 800; }
+      .tile p { margin-top: 11px; color: var(--muted); font-size: 15px; line-height: 1.5; }
+      .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 38px; }
+      .step { display: flex; flex-direction: column; min-height: 295px; padding: 22px; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); }
+      .step:nth-child(4) { border-color: #91b4a5; background: var(--sage); }
+      .step b { display: inline-grid; width: 29px; height: 29px; place-items: center; border-radius: 7px; background: var(--ink); color: white; font-size: 12px; }
+      .step h3 { margin-top: 48px; }
+      .step p { margin-top: 12px; color: var(--muted); font-size: 14px; line-height: 1.45; }
+      .flow-note { margin-top: 24px; padding: 16px 20px; border-left: 3px solid var(--jade); color: var(--muted); background: var(--sage); font-size: 15px; }
+      .proof-grid { display: grid; grid-template-columns: 1.45fr .7fr; gap: 30px; flex: 1; min-height: 0; margin-top: 25px; }
+      .screenshot { min-height: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: white; box-shadow: 0 24px 48px rgba(23,59,53,.11); }
+      .screenshot img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+      .proof-facts { display: flex; flex-direction: column; gap: 13px; }
+      .fact { display: grid; gap: 5px; padding: 19px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+      .fact strong { font-size: 28px; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+      .fact small { color: var(--muted); font-size: 12px; line-height: 1.45; }
+      .waterfall { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 38px; }
+      .waterfall-list { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: white; }
+      .waterfall-list > div { display: flex; justify-content: space-between; gap: 20px; padding: 20px 24px; border-bottom: 1px solid var(--line); font-size: 17px; }
+      .waterfall-list > div:last-child { border-bottom: 0; background: var(--sage); font-weight: 800; }
+      .waterfall-list b { white-space: nowrap; font-variant-numeric: tabular-nums; }
+      .risk-box { display: grid; align-content: start; gap: 18px; padding: 28px; border-radius: 12px; background: var(--ink); color: white; }
+      .risk-box h3 { font-size: 22px; }
+      .risk-box p { color: #c8d8d0; font-size: 15px; line-height: 1.5; }
+      .risk-box strong { color: var(--lime); }
+      .close-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 55px; flex: 1; align-items: center; }
+      .close-grid .lead { margin-top: 24px; max-width: 600px; }
+      .links { display: grid; gap: 14px; padding: 26px; border-radius: 14px; background: var(--ink); color: white; }
+      .links h3 { margin-bottom: 12px; color: var(--lime); }
+      .links a { padding-bottom: 12px; border-bottom: 1px solid #3e6258; font-size: 15px; }
+      .links a:last-child { padding-bottom: 0; border: 0; }
+      .links small { color: #c8d8d0; font-size: 11px; line-height: 1.5; }
+      @page { size: 13.333in 7.5in; margin: 0; }
+      @media print { html, body { background: white; } .slide { margin: 0; } }
+    </style>
+  </head>
+  <body>
+    <section class="slide">
+      <div class="topline"><div class="brand"><span class="brand-mark">T</span> talunai.</div><span class="pill"><span class="dot"></span> Finance & Commerce · BSC Testnet</span></div>
+      <div class="hero-grid">
+        <div class="hero-copy"><span class="eyebrow">Indonesia Web3 Hackathon 2026</span><h1>Likuiditas invoice yang bisa ditelusuri.</h1><p class="lead">Agent memeriksa bukti, manusia memutuskan, kontrak mendanai dan membagi pembayaran. Satu alur yang terbuka untuk investor.</p></div>
+        <div class="hero-proof"><div class="proof-row"><span class="small">Aset buku pool, testnet</span><strong>1.001.050.000</strong><span class="small">MockIDR · tanpa nilai rupiah</span></div><div class="proof-row"><span class="small">Fee yang telah diterima</span><strong>1.050.000</strong><span class="small">MockIDR dari satu invoice lunas</span></div></div>
+      </div>
+      <div class="footer"><span>01 / Hipotesis produk</span><span>Angka dari kontrak BSC Testnet, bukan nilai dana riil.</span></div>
+    </section>
+    <section class="slide">
+      <div class="topline"><div class="brand"><span class="brand-mark">T</span> talunai.</div><span class="eyebrow">Masalah yang diuji</span></div>
+      <div class="section-head"><h2>Invoice ada. Kepercayaan dan likuiditas belum otomatis ada.</h2><p class="lead">Saat supplier menunggu buyer membayar, lender perlu tahu apakah invoice benar, siapa yang mengakui kewajiban, dan ke mana uang mengalir.</p></div>
+      <div class="three"><div class="tile"><span class="tile-index">01</span><h3>Bukti</h3><p>Dokumen dan klaim perlu diperiksa sebelum modal dialokasikan.</p></div><div class="tile"><span class="tile-index">02</span><h3>Persetujuan</h3><p>Borrower, buyer, dan verifier memegang keputusan berbeda dengan jejak tindakan yang jelas.</p></div><div class="tile"><span class="tile-index">03</span><h3>Arus dana</h3><p>Investor dapat memeriksa dana tersedia, invoice yang didanai, pembayaran, dan fee di chain.</p></div></div>
+      <div class="footer"><span>02 / Mengapa produk ini ada</span><span>Hipotesis MVP, bukan klaim ukuran pasar atau validasi nasabah.</span></div>
+    </section>
+    <section class="slide">
+      <div class="topline"><div class="brand"><span class="brand-mark">T</span> talunai.</div><span class="eyebrow">Satu alur inti</span></div>
+      <div class="section-head"><h2>Dari bukti invoice ke hasil lender.</h2><p class="lead">Setiap perpindahan risiko punya pemilik keputusan. Agent memberi alasan dan sumber, lalu manusia mengesahkan.</p></div>
+      <div class="flow"><div class="step"><b>1</b><h3>Ajukan</h3><p>Borrower mengirim invoice dan bukti.</p></div><div class="step"><b>2</b><h3>Periksa</h3><p>Agent mengangkat anomali; verifier meninjau.</p></div><div class="step"><b>3</b><h3>Setujui</h3><p>Borrower dan buyer menandatangani terms yang sama.</p></div><div class="step"><b>4</b><h3>Danai</h3><p>Pool mendanai klaim yang lolos batas kontrak.</p></div><div class="step"><b>5</b><h3>Bayar</h3><p>Buyer membayar; pokok dan fee mengalir ke lender.</p></div></div>
+      <div class="flow-note">AI adalah lapisan pemeriksaan. Persetujuan kredit dan tanda tangan pihak invoice tetap tindakan manusia.</div>
+      <div class="footer"><span>03 / Workflow</span><span>Claim registry · pool · vault · transaksi BSC Testnet</span></div>
+    </section>
+    <section class="slide">
+      <div class="topline"><div class="brand"><span class="brand-mark">T</span> talunai.</div><span class="eyebrow">Bukti produk</span></div>
+      <div class="section-head"><h2>Angka dan transaksi berasal dari chain.</h2></div>
+      <div class="proof-grid"><div class="screenshot"><img src="assets/explore-onchain.png" alt="Explore TALUNAI memperlihatkan pool dan invoice lunas dari BSC Testnet" /></div><div class="proof-facts"><div class="fact"><span class="small">Likuiditas disetor</span><strong>1 miliar</strong><small>MockIDR testnet; transaksi terkonfirmasi.</small></div><div class="fact"><span class="small">Invoice didanai</span><strong>70 juta</strong><small>Pokok disalurkan oleh pool.</small></div><div class="fact"><span class="small">Hasil terverifikasi</span><strong>1,05 juta</strong><small>Fee diterima setelah buyer membayar.</small></div><p class="small">Buka <a href="https://testnet.bscscan.com/address/0x7858c6418eb818da50f57bc9c9bbfd9257b96ba1" style="color:#176653;text-decoration:underline">kontrak pool di BscScan</a> untuk memeriksa transaksi.</p></div></div>
+      <div class="footer"><span>04 / Explore publik</span><span>Satu market aktif · satu invoice lunas · APY tidak direka.</span></div>
+    </section>
+    <section class="slide">
+      <div class="topline"><div class="brand"><span class="brand-mark">T</span> talunai.</div><span class="eyebrow">Ekonomi dan risiko</span></div>
+      <div class="section-head"><h2>Fee berasal dari pembayaran buyer.</h2><p class="lead">Transaksi testnet yang selesai: buyer membayar invoice 100 juta MockIDR; kontrak membagi hasil dengan waterfall yang dapat diverifikasi.</p></div>
+      <div class="waterfall"><div class="waterfall-list"><div><span>Buyer membayar</span><b>100.000.000</b></div><div><span>Pokok kembali ke lender</span><b>70.000.000</b></div><div><span>Fee lender · 1,5% pokok</span><b>1.050.000</b></div><div><span>Sisa untuk borrower</span><b>28.950.000</b></div></div><div class="risk-box"><h3>Risiko terlihat sebelum deposit</h3><p>Eksposur dibatasi <strong>10% per invoice</strong> dan <strong>80% total pokok aktif</strong>. Buyer bisa gagal bayar; modal dapat terkunci sampai hak lender dilunasi.</p><p>Tidak ada APY tetap, penjamin, pasar sekunder, atau mekanisme write-off final pada MVP.</p></div></div>
+      <div class="footer"><span>05 / Hasil bukan emisi token</span><span>Semua nominal MockIDR testnet tanpa nilai ekonomis.</span></div>
+    </section>
+    <section class="slide">
+      <div class="topline"><div class="brand"><span class="brand-mark">T</span> talunai.</div><span class="eyebrow">Status rilis</span></div>
+      <div class="close-grid"><div><h2>Hipotesis sudah punya satu siklus terverifikasi.</h2><p class="lead">Kontrak, wallet consent, pendanaan, pembayaran, pembagian fee, dan explorer berjalan di BSC Testnet. Berikutnya: aktifkan kredensial OpenRouter untuk inferensi live, lalu uji dengan bukti dari mitra nyata.</p><p class="small" style="margin-top:28px">Status saat deck dibuat: pipeline agent berjalan dengan provider mock; integrasi OpenRouter tersedia tetapi belum boleh diklaim live sebelum key dan smoke test berhasil.</p></div><div class="links"><h3>Periksa bukti</h3><a href="https://testnet.bscscan.com/address/0x7858c6418eb818da50f57bc9c9bbfd9257b96ba1">Kontrak pool ↗</a><a href="https://testnet.bscscan.com/tx/0x10eb8de13f2b2fc758dbcd82c0bda09e91d5f6e0c74f1b883b539599c98b9fae">Pendanaan invoice ↗</a><a href="https://testnet.bscscan.com/tx/0x1e3963c18b7bf95867e21ad1ffe13869da35e5e6b6315dc1bf113f84c42f09da">Fee kembali ke pool ↗</a><small>Pitch untuk track Finance & Commerce. Rincian invoice dan receipt ada di dokumen proyek.</small></div></div>
+      <div class="footer"><span>06 / TALUNAI</span><span>Testnet MVP · keputusan manusia · transparansi onchain</span></div>
+    </section>
+  </body>
+</html>

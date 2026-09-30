@@ -1,0 +1,39 @@
+{
+  "at": "2026-09-28T18:44:25.477Z",
+  "checks": [
+    {
+      "name": "Read-only example opens without wallet and uses both goods categories",
+      "status": "PASSED"
+    },
+    {
+      "name": "New wallet signs in and sees actionable organization form",
+      "status": "PASSED"
+    },
+    {
+      "name": "Access request persists after reload without granting membership",
+      "status": "PASSED"
+    },
+    {
+      "name": "Approved administrator can open access request review",
+      "status": "PASSED"
+    },
+    {
+      "name": "Administrator creates a reviewed canonical organization and approves exact request",
+      "status": "PASSED"
+    },
+    {
+      "name": "Approved participant automatically enters workspace and can start an invoice",
+      "status": "PASSED"
+    },
+    {
+      "name": "Rejected request retains review reason and can be corrected",
+      "status": "PASSED"
+    },
+    {
+      "name": "Configured agent wallet cannot acquire participant role",
+      "status": "PASSED"
+    }
+  ],
+  "pageErrors": [],
+  "onchainTransactionsSent": 0
+}

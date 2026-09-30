@@ -1,0 +1,49 @@
+{
+  "chainId": 97,
+  "kind": "ARCHIVED_SYNTHETIC_CHECKS",
+  "claimId": "06721f35-2849-4b85-9f13-7687625a4d35",
+  "claimKey": "0x998367ef366cc5d1603901fe3753e24c9589d185cd16a2f6a815f5e894c2154a",
+  "runId": "b0c12fda-77ab-48e0-b0cc-92a431ee21a6",
+  "mode": "mock",
+  "status": "COMPLETED",
+  "createdAt": "2026-09-29T08:24:01.233Z",
+  "completedAt": "2026-09-29T08:24:09.664Z",
+  "checks": {
+    "extraction": "SUPPORTED_BY_DOCUMENT",
+    "buyerAcknowledgement": "SUPPORTED_BY_DOCUMENT",
+    "delivery": "SUPPORTED_BY_DOCUMENT",
+    "humanReviewAtCheck": "PENDING",
+    "conflictCount": 0
+  },
+  "acceptedOutstanding": "100000000",
+  "steps": [
+    {
+      "step": 1,
+      "stage": "READ_AUTHORIZED_EVIDENCE",
+      "recordedAt": "2026-09-29T08:24:09.664Z"
+    },
+    {
+      "step": 2,
+      "stage": "EXTRACT",
+      "recordedAt": "2026-09-29T08:24:09.664Z"
+    },
+    {
+      "step": 3,
+      "stage": "CHECK_EVIDENCE",
+      "recordedAt": "2026-09-29T08:24:09.664Z"
+    },
+    {
+      "step": 4,
+      "stage": "DETERMINISTIC_POLICY",
+      "recordedAt": "2026-09-29T08:24:09.664Z"
+    },
+    {
+      "step": 5,
+      "stage": "REQUEST_HUMAN_ACTION",
+      "recordedAt": "2026-09-29T08:24:09.664Z"
+    }
+  ],
+  "invoiceOriginalAmount": "120000000",
+  "previouslyPaidAmount": "20000000",
+  "invoiceDueAt": "2026-11-13T08:24:00.000Z"
+}

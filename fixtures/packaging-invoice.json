@@ -1,0 +1,21 @@
+{
+  "isSynthetic": true,
+  "locale": "id-ID",
+  "dateFormat": "YYYY-MM-DD",
+  "issuerName": "Pemasok Kemasan Sintetis",
+  "buyerName": "Pembeli Kemasan Sintetis",
+  "invoiceNumber": "KEMASAN/2026/001",
+  "issueDate": "2026-09-28",
+  "invoiceDueDate": "2026-11-12",
+  "currency": "IDR",
+  "invoiceOriginalAmount": "120.000.000",
+  "previouslyPaidAmount": "20.000.000",
+  "acceptedOutstandingAmount": "100.000.000",
+  "quantity": "10000",
+  "quantityUnit": "pcs",
+  "purchaseOrderReference": "PO-DEMO-001",
+  "proofOfDeliveryReference": "POD-DEMO-001 barang diterima 2026-09-28",
+  "buyerAcknowledgementReference": "ACK-DEMO-001 buyer mengakui outstanding 100.000.000 IDR",
+  "goodsDescription": "kemasan karton",
+  "goodsCategory": "PACKAGING"
+}

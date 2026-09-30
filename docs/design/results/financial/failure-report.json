@@ -1,0 +1,90 @@
+{
+  "results": [
+    {
+      "name": "actual worker evidence -> human verifier review",
+      "status": "PASSED"
+    },
+    {
+      "name": "both exact-term EIP712 approvals through wallet UI",
+      "status": "PASSED"
+    },
+    {
+      "name": "verifier UI registers and confirmed projection advances",
+      "status": "PASSED"
+    },
+    {
+      "name": "lender exact allowance -> atomic principal funding from UI",
+      "status": "PASSED"
+    },
+    {
+      "name": "buyer UI collection 50000000; canonical total 50000000",
+      "status": "PASSED"
+    },
+    {
+      "name": "buyer UI collection 21050000; canonical total 71050000",
+      "status": "PASSED"
+    },
+    {
+      "name": "buyer UI collection 28950000; canonical total 100000000",
+      "status": "PASSED"
+    }
+  ],
+  "error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByRole('button', { name: 'Tinjau penarikan residual', exact: true })\nExpected: 0\nReceived: 1\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByRole('button', { name: 'Tinjau penarikan residual', exact: true }) with timeout 5000ms\n  - waiting for getByRole('button', { name: 'Tinjau penarikan residual', exact: true })\n    14 × locator resolved to 1 element\n       - unexpected value \"1\"\n",
+  "broadcasts": [
+    {
+      "role": "verifier",
+      "hash": "0xb3d367beec16c232ce211040cd14eb73822aa729d33b8ae24505296d06331fbe",
+      "target": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"
+    },
+    {
+      "role": "lender",
+      "hash": "0xdabda364193d58383c38f17a6d0b7c5f379e1754e2e3911b3bcb18621fe1b163",
+      "target": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    },
+    {
+      "role": "lender",
+      "hash": "0x35b00bc0272bc8d1b0c5dbddce1c6727b02cca95617c62943e7bac715760a807",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "buyer",
+      "hash": "0xa271311596e96bf745192fbf14074ae587196df3af790a4f107b69708093fe04",
+      "target": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x5e1f76af7319e4b1add0e94fc0cd2a6770943149807cc4b7eb2a047300b1b9e9",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x9690f7ebb326da87af9f2b0aaa59edd5f422f5d3145c93885c0b8334eabbc9d4",
+      "target": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x4ddadf796719b47d31681195133b9bde738918dc26c378e621f6823ab909c6eb",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "buyer",
+      "hash": "0x518abd2fa7294a8f688449d94d29690ee8f979bafc47e85e690a9f977f5d4f11",
+      "target": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    },
+    {
+      "role": "buyer",
+      "hash": "0xdf902228e80f894cfa4d7d2bb3898e2b5c7945e108026b9c383db49be7998153",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "lender",
+      "hash": "0xa1a7c235e59f97f42a5ec021a7841558ddca3d4c27cf42edaaac9e32a8fe2fac",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    },
+    {
+      "role": "borrower",
+      "hash": "0x0ad8c22829d31f368acf1e2aa8b192a06da4b49b996422ed619537efa5fe4b80",
+      "target": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+    }
+  ]
+}

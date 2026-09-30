@@ -1,0 +1,75 @@
+{
+  "chainId": 97,
+  "isSynthetic": true,
+  "providerMode": "mock",
+  "claimId": "06721f35-2849-4b85-9f13-7687625a4d35",
+  "claimKey": "0x998367ef366cc5d1603901fe3753e24c9589d185cd16a2f6a815f5e894c2154a",
+  "principal": "70000000",
+  "fee": "1050000",
+  "buyerPaid": "100000000",
+  "lenderRedeemed": "1001050000",
+  "finalPoolIdle": "1001050000",
+  "transactions": [
+    {
+      "action": "TOPUP_BUYER",
+      "hash": "0x89eeeb8d2268cd29709e47aa8ead321866daf82bfd859646ef8225cfabd844b2",
+      "blockNumber": "133829496"
+    },
+    {
+      "action": "TOPUP_BORROWER",
+      "hash": "0x6b4df1d6a059b271c8f48b0d6fc5177c3ca0f9a16e7e3db0c42d5ee79afe0a2c",
+      "blockNumber": "133829508"
+    },
+    {
+      "action": "TOPUP_LENDER",
+      "hash": "0x50c67651cd25a0abcfb128853c6cb530694bbb1ab49813d170fd69f0ed8de5ff",
+      "blockNumber": "133829521"
+    },
+    {
+      "action": "REGISTER",
+      "hash": "0xfabf51f052e848237e832f3f25f1bb90927013e87976fed4e3ef5d83fe523dad",
+      "blockNumber": "133829727"
+    },
+    {
+      "action": "POOL_FUND_CLAIM",
+      "hash": "0x10eb8de13f2b2fc758dbcd82c0bda09e91d5f6e0c74f1b883b539599c98b9fae",
+      "blockNumber": "133829784"
+    },
+    {
+      "action": "APPROVE_TOKEN",
+      "hash": "0x9cfebed42b1c80b11e4bd6d92c73e1c5374a31f242fa6f1e1cac109745eb06c8",
+      "blockNumber": "133829877"
+    },
+    {
+      "action": "COLLECT_BUYER_PAYMENT",
+      "hash": "0x1fc3026d8d67db98288ad0d6ce02a26fd5d91a53954ca9409d428921783d287e",
+      "blockNumber": "133829917"
+    },
+    {
+      "action": "POOL_HARVEST",
+      "hash": "0x1e3963c18b7bf95867e21ad1ffe13869da35e5e6b6315dc1bf113f84c42f09da",
+      "blockNumber": "133829952"
+    },
+    {
+      "action": "WITHDRAW_BORROWER",
+      "hash": "0x4dbbda42b3947c12cfaf787a8a43a59b6f8829fc944c40d916c434c89c0977ba",
+      "blockNumber": "133829989"
+    },
+    {
+      "action": "POOL_REDEEM",
+      "hash": "0x04caa885263c69dacac61f7e70df3600c5d91b0abccaff52a841427281b6ba86",
+      "blockNumber": "133830000"
+    },
+    {
+      "action": "APPROVE_POOL_REDEPOSIT",
+      "hash": "0x04e91e5f1a2c10e888252a833c1e341ca4cd8c39f729524746b203fcaa497e73",
+      "blockNumber": "133830009"
+    },
+    {
+      "action": "POOL_REDEPOSIT",
+      "hash": "0x3823003fbc2061d26ea7839bca3a456a5fc43eb7f97998096b44994e997ba1ce",
+      "blockNumber": "133830027"
+    }
+  ],
+  "verifiedAt": "2026-09-29T08:27:49.561Z"
+}

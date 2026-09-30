@@ -1,0 +1,31 @@
+{
+  "project": "TALUNAI",
+  "chainId": 97,
+  "isSynthetic": true,
+  "verifiedAt": "2026-09-28T15:44:08.397Z",
+  "verificationBlock": "133696225",
+  "requiredConfirmations": 3,
+  "startupChecks": "PASS",
+  "agent": "0x954Da57Aeec71b02c0A9369c0C3ED6D21F460aDd",
+  "contracts": {
+    "registry": "0xec653cdf649f0de749ffcf9bf3368ff6bce710d5",
+    "vault": "0x47738dc96cb3de00da06cad6e5b16187af3c4c32",
+    "executor": "0x333584518018c6529902cf2f83376128509201bc",
+    "token": "0x96125aaad931266f1d7bacfa54e1915993ca8c4d"
+  },
+  "roles": {
+    "agentCanHold": true,
+    "agentIsExecutorAdmin": false,
+    "agentIsRegistryAdmin": false,
+    "agentCanVerify": false,
+    "agentIsVaultAdmin": false,
+    "agentCanFund": false,
+    "agentIsTokenAdmin": false,
+    "agentCanMint": false
+  },
+  "confirmedTransactions": 8,
+  "deploymentGasCostTBNB": "0.0005443856",
+  "agentBalanceTBNB": "0.2975979",
+  "deployerBalanceTBNB": "0.0018556144",
+  "scope": "DEPLOYMENT_BOOTSTRAP_AND_ROLE_READBACK; NO_PUBLIC_TESTNET_FINANCING_FLOW_CLAIMED"
+}

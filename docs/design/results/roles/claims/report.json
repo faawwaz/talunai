@@ -1,0 +1,104 @@
+{
+  "timestamp": "2026-09-28T18:48:34.870Z",
+  "baseUrl": "https://localhost:3000",
+  "chainId": 97,
+  "isSynthetic": true,
+  "providerMode": "mock",
+  "walletMode": "NODE_SIWE_AND_EXACT_CONSENTS_NO_BROADCAST_NO_KEYS_IN_BROWSER",
+  "browser": "Chromium",
+  "browserErrors": [],
+  "screenshotsAreVisualBaselines": false,
+  "fixtures": [
+    {
+      "claimId": "d336f118-01b2-419f-a8bc-4bb94678d1ad",
+      "goodsCategory": "COCOA",
+      "runId": "3e23abea-1575-4b05-a637-ebfc74f608f9",
+      "runStatus": "COMPLETED",
+      "providerMode": "mock"
+    },
+    {
+      "claimId": "c60b18d5-798e-4d14-ac85-c36001ece685",
+      "goodsCategory": "PACKAGING",
+      "runId": "d7fbbb64-13d1-4921-883c-05c527f7dd91",
+      "runStatus": "COMPLETED",
+      "providerMode": "mock"
+    }
+  ],
+  "mockedResponses": [
+    "One explicit 503 GET /v1/claims error-path check; other API traffic uses actual backend"
+  ],
+  "passed": 14,
+  "failed": 0,
+  "results": [
+    {
+      "name": "anonymous shell does not automatically prompt wallet",
+      "status": "PASSED",
+      "durationMs": 1580
+    },
+    {
+      "name": "rejected SIWE signature stays anonymous and displays recovery",
+      "status": "PASSED",
+      "durationMs": 332
+    },
+    {
+      "name": "real SIWE authenticates synthetic borrower with revocable cookie session",
+      "status": "PASSED",
+      "durationMs": 1672
+    },
+    {
+      "name": "real cocoa document upload and persistent worker analysis",
+      "status": "PASSED",
+      "durationMs": 8625
+    },
+    {
+      "name": "real packaging UI creation, goods revision, document upload and persistent analysis",
+      "status": "PASSED",
+      "durationMs": 11905
+    },
+    {
+      "name": "overview uses authorized data and passes automated accessibility",
+      "status": "PASSED",
+      "durationMs": 2674
+    },
+    {
+      "name": "claims list contains both real synthetic goods categories",
+      "status": "PASSED",
+      "durationMs": 1437
+    },
+    {
+      "name": "claim detail and evidence preserve exact amounts, goods and analysis",
+      "status": "PASSED",
+      "durationMs": 3115
+    },
+    {
+      "name": "all sidebar destinations render and mobile sheet restores focus on Escape",
+      "status": "PASSED",
+      "durationMs": 5653
+    },
+    {
+      "name": "failed list request has retry affordance without inventing records",
+      "status": "PASSED",
+      "durationMs": 549
+    },
+    {
+      "name": "unprovisioned wallet cannot fetch another organization's private document",
+      "status": "PASSED",
+      "durationMs": 1326
+    },
+    {
+      "name": "verifier reviews actual evidence and binds approvals to the new terms version",
+      "status": "PASSED",
+      "durationMs": 3280
+    },
+    {
+      "name": "rejected borrower EIP712 consent is retryable and both exact-term signatures persist without broadcast",
+      "status": "PASSED",
+      "durationMs": 17096
+    },
+    {
+      "name": "logout revokes session and smoke wallet never broadcasts money actions",
+      "status": "PASSED",
+      "durationMs": 1651
+    }
+  ]
+}

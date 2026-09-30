@@ -1,0 +1,90 @@
+name: talunai
+x-runtime: &runtime
+  APP_ENV: local
+  CHAIN_ID: "31337"
+  DATABASE_URL: postgres://talunai:talunai-local-only@postgres:5432/talunai
+  RPC_HTTP_URL: http://anvil:8545
+  CONTRACT_REGISTRY_ADDRESS: ${CONTRACT_REGISTRY_ADDRESS:-}
+  CONTRACT_VAULT_ADDRESS: ${CONTRACT_VAULT_ADDRESS:-}
+  CONTRACT_AGENT_EXECUTOR_ADDRESS: ${CONTRACT_AGENT_EXECUTOR_ADDRESS:-}
+  MOCK_IDR_ADDRESS: ${MOCK_IDR_ADDRESS:-}
+  DEPLOYMENT_START_BLOCK: ${DEPLOYMENT_START_BLOCK:-1}
+  CHAIN_CONFIRMATIONS: "1"
+  INDEXER_RESCAN_BLOCKS: "20"
+  LLM_MODE: ${LLM_MODE:-mock}
+  DOCUMENT_STORAGE_ROOT: /app/.local/documents
+services:
+  bootstrap:
+    build: .
+    profiles: ["tools"]
+    command: ["node", "--import", "tsx", "scripts/bootstrap-compose.ts"]
+    environment:
+      <<: *runtime
+    volumes:
+      - ./.local/compose:/app/.local
+      - ./deployments:/app/deployments
+    depends_on:
+      postgres: { condition: service_healthy }
+      anvil: { condition: service_started }
+  postgres:
+    image: postgres:17.9-bookworm
+    environment:
+      POSTGRES_USER: talunai
+      POSTGRES_PASSWORD: talunai-local-only
+      POSTGRES_DB: talunai
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U talunai -d talunai"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:v1.7.1
+    entrypoint:
+      [
+        "anvil",
+        "--host",
+        "0.0.0.0",
+        "--chain-id",
+        "31337",
+        "--block-time",
+        "1",
+        "--silent",
+        "--state",
+        "/state/anvil.json",
+      ]
+    volumes: [anvilstate:/state]
+  web:
+    build: .
+    environment:
+      <<: *runtime
+      NODE_ENV: production
+      APP_ORIGIN: http://localhost:3000
+      SIWE_DOMAIN: localhost:3000
+      SIWE_URI: http://localhost:3000
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET using local:init}
+      CLAIM_ID_HMAC_KEY: ${CLAIM_ID_HMAC_KEY:?Set CLAIM_ID_HMAC_KEY using local:init}
+    ports: ["127.0.0.1:3000:3000"]
+    volumes: [documents:/app/.local/documents]
+    depends_on:
+      postgres: { condition: service_healthy }
+      anvil: { condition: service_started }
+  worker:
+    build: .
+    command: ["node", "dist/worker/main.js"]
+    environment:
+      <<: *runtime
+      NODE_ENV: production
+      AGENT_PRIVATE_KEY: ${AGENT_PRIVATE_KEY:?Set local test agent key}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-qwen/qwen3.5-flash-02-23}
+      AGENT_MAX_STEPS: "8"
+      AGENT_TIMEOUT_MS: "30000"
+    volumes: [documents:/app/.local/documents]
+    depends_on:
+      postgres: { condition: service_healthy }
+      anvil: { condition: service_started }
+volumes:
+  pgdata:
+  anvilstate:
+  documents:

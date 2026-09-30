@@ -1,0 +1,83 @@
+{
+  "researchedAt": "2026-09-30",
+  "sources": [
+    {
+      "id": "unilever-local-2024",
+      "publisher": "PT Unilever Indonesia Tbk",
+      "title": "Laporan Keberlanjutan 2024",
+      "url": "https://www.unilever.co.id/files/indonesia-sustainability-report-2024.pdf",
+      "reportPeriod": "2024",
+      "locator": "Membangun Hubungan Kuat dengan Pemasok Lokal; GRI 204-1",
+      "alternateOfficialUrl": "https://www.unilever.co.id/files/92ui5egz/production/155e28a972c2b77407ad0aea63cd424e450e5db8.pdf",
+      "finding": "Pada akhir 2024, 68% pasokan bersumber lokal, mewakili 87% nilai pembelian.",
+      "category": "PUBLIC_FACT",
+      "verification": "Teks sumber resmi ditemukan melalui indeks pencarian; unduhan PDF langsung tidak tersedia dalam sesi ini."
+    },
+    {
+      "id": "unilever-scf-2025",
+      "publisher": "PT Unilever Indonesia Tbk",
+      "title": "Laporan Keuangan Interim 30 Juni 2025",
+      "url": "https://beta.unilever.co.id/files/financial-statements-quarter-2-2025.pdf",
+      "reportPeriod": "2025-06-30",
+      "locator": "Catatan 34, Transaksi non-kas atas aktivitas investasi; halaman cetak 5/80",
+      "finding": "Perseroan menjelaskan pengaturan SCF: pemasok dapat memilih pembayaran invoice lebih awal dari bank, dan bank menerima pembayaran dari perseroan kemudian.",
+      "category": "PUBLIC_FACT",
+      "verification": "Teks sumber resmi terindeks; isi juga ditemukan pada salinan keterbukaan laporan. Tidak menyatakan skema tersebut dijalankan Talunai."
+    },
+    {
+      "id": "unilever-coconut-2024",
+      "publisher": "PT Unilever Indonesia Tbk",
+      "title": "Laporan Tahunan 2024",
+      "url": "https://www.unilever.co.id/files/indonesia-annual-reports-2024.pdf",
+      "reportPeriod": "2024",
+      "locator": "Mendorong Keunggulan Kompetitif melalui Ketahanan, Ketangkasan, dan Keberlanjutan; halaman cetak 179",
+      "finding": "Gula kelapa disebut sebagai salah satu komoditas yang relevan dalam kemitraan pemasok lokal. Total pemasok pada akhir 2024 disebut 1.737.",
+      "category": "PUBLIC_FACT",
+      "verification": "Teks resmi terindeks. Gula kelapa juga dibahas dalam laporan keberlanjutan 2023, dengan program petani di Jawa Barat dan Lampung."
+    },
+    {
+      "id": "mandiri-early-payment",
+      "publisher": "Bank Mandiri",
+      "title": "Supplier Financing di Livin’ by Mandiri",
+      "url": "https://www.bankmandiri.co.id/en/livin/edukasi/supplier-financing",
+      "locator": "FAQ: Apa itu Supplier Financing melalui Livin’?",
+      "finding": "Supplier financing mempercepat pencairan invoice sebelum jatuh tempo menggunakan forfaiting. Supplier harus direkomendasikan principal dan memenuhi onboarding bank.",
+      "category": "PUBLIC_FACT",
+      "verification": "Halaman produk resmi. Tidak digunakan sebagai bukti kemitraan Mandiri–Talunai atau Mandiri–Unilever pada transaksi simulasi ini."
+    },
+    {
+      "id": "coconut-price-supplier",
+      "publisher": "Nusantara Alami",
+      "title": "Katalog produk gula kelapa",
+      "url": "https://www.nusantara-alami.com/ViewProduk.aspx?p=4",
+      "locator": "Gula kelapa batok; penawaran di atas satu ton",
+      "finding": "Katalog menyebut gula kelapa batok Rp25.000/kg dan mengarahkan kuantitas di atas satu ton untuk negosiasi.",
+      "category": "PUBLIC_FACT",
+      "verification": "Harga indikatif pada katalog terindeks, bukan penawaran mengikat, kontrak Unilever, atau harga pasar terkini yang dijamin."
+    },
+    {
+      "id": "coconut-price-study",
+      "publisher": "Agrisaintifika, Universitas Veteran Bangun Nusantara",
+      "title": "Analisis Nilai Tambah Gula Kelapa Industri Rumah Tangga, Vol. 8 No. 1, 2024",
+      "url": "https://journal.univetbantara.ac.id/index.php/agrisaintifika/article/download/5101/2851",
+      "reportPeriod": "2024; pengamatan Oktober 2023",
+      "locator": "Input, Output dan Harga",
+      "finding": "Studi melaporkan harga jual gula kelapa Rp25.000 untuk kemasan satu kilogram.",
+      "category": "PUBLIC_FACT",
+      "verification": "Riset primer sebagai pembanding historis; bukan bukti harga grosir Unilever."
+    }
+  ],
+  "decision": {
+    "product": "Gula kelapa cetak, bukan gula aren atau gula semut organik ekspor",
+    "quantityKg": 4000,
+    "unitPriceIdr": 25000,
+    "reasoning": "Harga indikatif punya referensi pemasok dan studi primer. Pesanan empat ton adalah asumsi agregasi pemasok fiktif; cukup masuk akal untuk pembeli industri, tetapi bukan ukuran pesanan yang dibuktikan oleh sumber. Nilai dipilih agar invoice Rp100 juta konsisten dengan pendanaan Rp70 juta dan waterfall kontrak.",
+    "notProven": [
+      "Hubungan supplier fiktif dengan Unilever",
+      "Pesanan empat ton oleh Unilever",
+      "Tempo Unilever 45 hari pada produk ini",
+      "Harga pembelian aktual Unilever",
+      "Persetujuan atau endorsement Unilever terhadap Talunai"
+    ]
+  }
+}

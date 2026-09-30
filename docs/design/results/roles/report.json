@@ -1,0 +1,533 @@
+{
+  "at": "2026-09-28T18:43:39.038Z",
+  "chainId": 97,
+  "baseUrl": "https://localhost:3000",
+  "checks": [
+    {
+      "name": "Anonymous direct protected URLs redirect to scoped login",
+      "status": "PASSED",
+      "durationMs": 6328
+    },
+    {
+      "name": "borrower: actual SIWE opens the correct workspace",
+      "status": "PASSED",
+      "durationMs": 1834
+    },
+    {
+      "name": "borrower: every own sidebar route renders and stays scoped",
+      "status": "PASSED",
+      "durationMs": 3136
+    },
+    {
+      "name": "borrower: mobile role home and drawer keep navigation usable",
+      "status": "PASSED",
+      "durationMs": 1346
+    },
+    {
+      "name": "buyer: actual SIWE opens the correct workspace",
+      "status": "PASSED",
+      "durationMs": 1882
+    },
+    {
+      "name": "buyer: every own sidebar route renders and stays scoped",
+      "status": "PASSED",
+      "durationMs": 3098
+    },
+    {
+      "name": "buyer: mobile role home and drawer keep navigation usable",
+      "status": "PASSED",
+      "durationMs": 1431
+    },
+    {
+      "name": "lender: actual SIWE opens the correct workspace",
+      "status": "PASSED",
+      "durationMs": 1640
+    },
+    {
+      "name": "lender: every own sidebar route renders and stays scoped",
+      "status": "PASSED",
+      "durationMs": 2919
+    },
+    {
+      "name": "lender: mobile role home and drawer keep navigation usable",
+      "status": "PASSED",
+      "durationMs": 1292
+    },
+    {
+      "name": "verifier: actual SIWE opens the correct workspace",
+      "status": "PASSED",
+      "durationMs": 1954
+    },
+    {
+      "name": "verifier: every own sidebar route renders and stays scoped",
+      "status": "PASSED",
+      "durationMs": 3191
+    },
+    {
+      "name": "verifier: mobile role home and drawer keep navigation usable",
+      "status": "PASSED",
+      "durationMs": 1584
+    },
+    {
+      "name": "admin: actual SIWE opens the correct workspace",
+      "status": "PASSED",
+      "durationMs": 1863
+    },
+    {
+      "name": "admin: every own sidebar route renders and stays scoped",
+      "status": "PASSED",
+      "durationMs": 3388
+    },
+    {
+      "name": "admin: mobile role home and drawer keep navigation usable",
+      "status": "PASSED",
+      "durationMs": 1614
+    },
+    {
+      "name": "Participant wallets cannot enter admin, verifier or operator pages/APIs",
+      "status": "PASSED",
+      "durationMs": 5409
+    },
+    {
+      "name": "Verifier can monitor agent operations without admin organization or audit access",
+      "status": "PASSED",
+      "durationMs": 1095
+    },
+    {
+      "name": "Legacy workspace links preserve route suffix and unsafe login next stays local",
+      "status": "PASSED",
+      "durationMs": 1504
+    },
+    {
+      "name": "Operator overview reports persisted health and real recent runs",
+      "status": "PASSED",
+      "durationMs": 2040
+    },
+    {
+      "name": "Operator run filters and persisted detail render without invented job state",
+      "status": "PASSED",
+      "durationMs": 2440
+    },
+    {
+      "name": "Operator transaction filters and admin organization authorities use real endpoints",
+      "status": "PASSED",
+      "durationMs": 2330
+    },
+    {
+      "name": "Admin audit filter and disclosure expand real persisted entries",
+      "status": "PASSED",
+      "durationMs": 1565
+    },
+    {
+      "name": "Unprovisioned wallet remains outside protected claims and operator data",
+      "status": "PASSED",
+      "durationMs": 2263
+    },
+    {
+      "name": "Browser runtime has no uncaught errors and never requests financial broadcasts",
+      "status": "PASSED",
+      "durationMs": 0
+    }
+  ],
+  "routes": [
+    {
+      "role": "borrower",
+      "path": "/borrower",
+      "status": 200,
+      "heading": "Usaha berjalan. Piutang terpantau."
+    },
+    {
+      "role": "borrower",
+      "path": "/borrower/claims",
+      "status": 200,
+      "heading": "Piutang usaha"
+    },
+    {
+      "role": "borrower",
+      "path": "/borrower/tasks",
+      "status": 200,
+      "heading": "Perlu tindakan"
+    },
+    {
+      "role": "borrower",
+      "path": "/borrower/payments",
+      "status": 200,
+      "heading": "Pembayaran"
+    },
+    {
+      "role": "borrower",
+      "path": "/borrower/activity",
+      "status": 200,
+      "heading": "Aktivitas agent"
+    },
+    {
+      "role": "borrower",
+      "path": "/borrower/settings",
+      "status": 200,
+      "heading": "Organisasi & jaringan"
+    },
+    {
+      "role": "borrower",
+      "path": "/borrower",
+      "status": 200,
+      "heading": "Usaha berjalan. Piutang terpantau."
+    },
+    {
+      "role": "buyer",
+      "path": "/buyer",
+      "status": 200,
+      "heading": "Tagihan yang jelas. Pembayaran terarah."
+    },
+    {
+      "role": "buyer",
+      "path": "/buyer/claims",
+      "status": 200,
+      "heading": "Invoice organisasi Anda"
+    },
+    {
+      "role": "buyer",
+      "path": "/buyer/tasks",
+      "status": 200,
+      "heading": "Perlu tindakan"
+    },
+    {
+      "role": "buyer",
+      "path": "/buyer/payments",
+      "status": 200,
+      "heading": "Pembayaran"
+    },
+    {
+      "role": "buyer",
+      "path": "/buyer/activity",
+      "status": 200,
+      "heading": "Aktivitas agent"
+    },
+    {
+      "role": "buyer",
+      "path": "/buyer/settings",
+      "status": 200,
+      "heading": "Organisasi & jaringan"
+    },
+    {
+      "role": "buyer",
+      "path": "/buyer",
+      "status": 200,
+      "heading": "Tagihan yang jelas. Pembayaran terarah."
+    },
+    {
+      "role": "lender",
+      "path": "/lender",
+      "status": 200,
+      "heading": "Tinjau bukti sebelum mendanai."
+    },
+    {
+      "role": "lender",
+      "path": "/lender/claims",
+      "status": 200,
+      "heading": "Piutang untuk ditinjau"
+    },
+    {
+      "role": "lender",
+      "path": "/lender/tasks",
+      "status": 200,
+      "heading": "Perlu tindakan"
+    },
+    {
+      "role": "lender",
+      "path": "/lender/payments",
+      "status": 200,
+      "heading": "Pembayaran"
+    },
+    {
+      "role": "lender",
+      "path": "/lender/activity",
+      "status": 200,
+      "heading": "Aktivitas agent"
+    },
+    {
+      "role": "lender",
+      "path": "/lender/settings",
+      "status": 200,
+      "heading": "Organisasi & jaringan"
+    },
+    {
+      "role": "lender",
+      "path": "/lender",
+      "status": 200,
+      "heading": "Tinjau bukti sebelum mendanai."
+    },
+    {
+      "role": "verifier",
+      "path": "/verifier",
+      "status": 200,
+      "heading": "Bukti dulu. Keputusan yang dapat ditelusuri."
+    },
+    {
+      "role": "verifier",
+      "path": "/verifier/claims",
+      "status": 200,
+      "heading": "Antrean pengajuan"
+    },
+    {
+      "role": "verifier",
+      "path": "/verifier/tasks",
+      "status": 200,
+      "heading": "Perlu tindakan"
+    },
+    {
+      "role": "verifier",
+      "path": "/verifier/payments",
+      "status": 200,
+      "heading": "Pembayaran"
+    },
+    {
+      "role": "verifier",
+      "path": "/verifier/activity",
+      "status": 200,
+      "heading": "Aktivitas agent"
+    },
+    {
+      "role": "verifier",
+      "path": "/verifier/settings",
+      "status": 200,
+      "heading": "Organisasi & jaringan"
+    },
+    {
+      "role": "verifier",
+      "path": "/verifier",
+      "status": 200,
+      "heading": "Bukti dulu. Keputusan yang dapat ditelusuri."
+    },
+    {
+      "role": "admin",
+      "path": "/admin",
+      "status": 200,
+      "heading": "Jaga kewenangan. Pantau prosesnya."
+    },
+    {
+      "role": "admin",
+      "path": "/admin/access",
+      "status": 200,
+      "heading": "Akses organisasi"
+    },
+    {
+      "role": "admin",
+      "path": "/admin/organizations",
+      "status": 200,
+      "heading": "Organisasi & kewenangan"
+    },
+    {
+      "role": "admin",
+      "path": "/admin/claims",
+      "status": 200,
+      "heading": "Piutang usaha"
+    },
+    {
+      "role": "admin",
+      "path": "/admin/audit",
+      "status": 200,
+      "heading": "Jejak audit"
+    },
+    {
+      "role": "admin",
+      "path": "/admin/settings",
+      "status": 200,
+      "heading": "Organisasi & jaringan"
+    },
+    {
+      "role": "admin",
+      "path": "/admin",
+      "status": 200,
+      "heading": "Jaga kewenangan. Pantau prosesnya."
+    },
+    {
+      "role": "verifier",
+      "path": "/agent",
+      "status": 200,
+      "heading": "Ruang kendali"
+    },
+    {
+      "role": "admin",
+      "path": "/agent",
+      "status": 200,
+      "heading": "Ruang kendali"
+    },
+    {
+      "role": "admin",
+      "path": "/agent/runs",
+      "status": 200,
+      "heading": "Proses pemeriksaan"
+    },
+    {
+      "role": "admin",
+      "path": "/agent/runs/d94ee4d5-8c28-457b-962f-824e36c81599",
+      "status": 200,
+      "heading": "UI/PACKAGING/12C64BFA"
+    },
+    {
+      "role": "admin",
+      "path": "/agent/transactions",
+      "status": 200,
+      "heading": "Pemantauan transaksi"
+    },
+    {
+      "role": "admin",
+      "path": "/admin/organizations",
+      "status": 200,
+      "heading": "Organisasi & kewenangan"
+    },
+    {
+      "role": "admin",
+      "path": "/admin/audit",
+      "status": 200,
+      "heading": "Jejak audit"
+    }
+  ],
+  "deniedRoutes": [
+    {
+      "path": "/admin/organizations",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/admin/audit",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/agent/runs",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/verifier",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/admin/organizations",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/admin/audit",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/agent/runs",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/verifier",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/admin/organizations",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/admin/audit",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/agent/runs",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/verifier",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/admin/access",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/borrower",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/agent",
+      "status": 200,
+      "explicitNotFound": true
+    },
+    {
+      "path": "/admin/audit",
+      "status": 200,
+      "explicitNotFound": true
+    }
+  ],
+  "axeResults": [
+    {
+      "name": "borrower-mobile",
+      "passed": 22,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "buyer-mobile",
+      "passed": 22,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "lender-mobile",
+      "passed": 20,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "verifier-mobile",
+      "passed": 23,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "admin-mobile",
+      "passed": 23,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "agent-overview-desktop",
+      "passed": 28,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "agent-overview-mobile",
+      "passed": 25,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "agent-run-detail-desktop",
+      "passed": 28,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "admin-organizations-desktop",
+      "passed": 27,
+      "violations": 0,
+      "incomplete": 0
+    },
+    {
+      "name": "admin-audit-desktop",
+      "passed": 30,
+      "violations": 0,
+      "incomplete": 0
+    }
+  ],
+  "pageErrors": [],
+  "onchainTransactionsSent": 0,
+  "fixturePolicy": "Read-only operational checks; actual SIWE sessions only. No database edits, fixture deletions, financial transactions, or participant keys written."
+}

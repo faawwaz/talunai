@@ -1,0 +1,45 @@
+{
+  "project": "TALUNAI",
+  "chainId": 97,
+  "isSynthetic": true,
+  "address": "0x7858c6418eb818da50f57bc9c9bbfd9257b96ba1",
+  "asset": "0x96125aaad931266f1d7bacfa54e1915993ca8c4d",
+  "vault": "0x47738dc96cb3de00da06cad6e5b16187af3c4c32",
+  "riskDisclosureHash": "0x6c0c94be66eb8d788397e20194008e3ba27d732151ea5c0727e7b8b96d085af4",
+  "initialInvestor": "0xc49dcA73553AB463eBFa352587856bd72B3B0019",
+  "initialDepositMockIDR": "1000000000",
+  "deploymentStartBlock": "133809035",
+  "transactions": [
+    {
+      "name": "deploy",
+      "txHash": "0x538dd2301e4b87b7bf6ba4f85d7b9c41fc26843382152c04b30dae8c5dbbeb83",
+      "blockNumber": "133809035"
+    },
+    {
+      "name": "grant-pool-vault-lender",
+      "txHash": "0xec49694c14d401bfe1b24caf0f146d55accaf7c95b608ad66b1d657d6ce5aaa7",
+      "blockNumber": "133809052"
+    },
+    {
+      "name": "grant-investor",
+      "txHash": "0xb1be74e7aa28b53e1f4c9fd1d886932b42238d67955ffdca9c7361a10b1124f8",
+      "blockNumber": "133809082"
+    },
+    {
+      "name": "fund-investor-test-gas",
+      "txHash": "0x53aa7d499ced50b2ac26a0c8c71b5d81229a09fd9f33bcbb89089221c44829b0",
+      "blockNumber": "133809120"
+    },
+    {
+      "name": "approve-deposit",
+      "txHash": "0x06b3b7d7036b0fad3f76dcffec3e2d77873fe603877c74981bdb0a79c9b173d8",
+      "blockNumber": "133809138"
+    },
+    {
+      "name": "deposit-1-billion-MockIDR",
+      "txHash": "0x6b04ad9864f3dff28063bf4382b1ec78229a30dee8377b41ed986393b26b12a4",
+      "blockNumber": "133809169"
+    }
+  ],
+  "verifiedAt": "2026-09-29T05:51:20.687Z"
+}

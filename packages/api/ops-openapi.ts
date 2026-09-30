@@ -1,0 +1,185 @@
+const text = { type: "string" },
+  nullableText = { type: ["string", "null"] },
+  integer = { type: "integer", minimum: 0 },
+  date = { type: "string", format: "date-time" },
+  nullableDate = { type: ["string", "null"], format: "date-time" },
+  strings = { type: "array", items: text },
+  bool = { type: "boolean" };
+const object = (properties: Record<string, unknown>) => ({
+  type: "object",
+  properties,
+  required: Object.keys(properties),
+  additionalProperties: false,
+});
+const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
+const page = (name: string, extra: Record<string, unknown> = {}) =>
+  object({
+    items: { type: "array", items: ref(name) },
+    limit: integer,
+    offset: integer,
+    total: integer,
+    ...extra,
+  });
+const stage = {
+  provider: nullableText,
+  model: nullableText,
+  latencyMs: { type: ["number", "null"], minimum: 0 },
+  explanation: nullableText,
+  reasonCodes: strings,
+  evidenceIds: strings,
+};
+const run = {
+  id: text,
+  claimId: text,
+  version: integer,
+  currentVersion: integer,
+  invoiceNumber: text,
+  organizationName: text,
+  mode: { type: "string", enum: ["mock", "live"] },
+  status: {
+    type: "string",
+    enum: ["QUEUED", "RUNNING", "COMPLETED", "FAILED", "STALE"],
+  },
+  stage: text,
+  inputHash: text,
+  ...stage,
+  errorCode: nullableText,
+  createdAt: date,
+  updatedAt: date,
+  retryable: bool,
+};
+const freshness = {
+  type: "string",
+  enum: ["READY", "DEGRADED", "STALE", "UNAVAILABLE"],
+};
+export const opsSchemas: Record<string, unknown> = {
+  OpsStatus: object({
+    observedAt: date,
+    chainId: { type: "integer", enum: [97, 31337] },
+    isSynthetic: { const: true },
+    freshnessThresholdSeconds: { const: 120 },
+    status: { type: "string", enum: ["READY", "DEGRADED", "UNAVAILABLE"] },
+    worker: object({
+      status: freshness,
+      updatedAt: nullableDate,
+      errorCode: nullableText,
+      mode: { type: ["string", "null"], enum: ["mock", "live", null] },
+      model: nullableText,
+      configuredMode: { type: "string", enum: ["mock", "live"] },
+      configurationMatch: { type: ["boolean", "null"] },
+    }),
+    indexer: object({
+      status: freshness,
+      updatedAt: nullableDate,
+      blockNumber: nullableText,
+      blockHash: nullableText,
+    }),
+    queues: object({
+      source: { const: "POSTGRES_OUTBOX" },
+      pending: integer,
+      oldestPendingAt: nullableDate,
+      byType: {
+        type: "array",
+        items: object({ type: text, pending: integer }),
+      },
+    }),
+    runs: object({
+      QUEUED: integer,
+      RUNNING: integer,
+      COMPLETED: integer,
+      FAILED: integer,
+      STALE: integer,
+    }),
+    transactions: object({
+      pending: integer,
+      unknown: integer,
+      reverted: integer,
+    }),
+  }),
+  OpsRun: object(run),
+  OpsRunPage: page("OpsRun"),
+  OpsRunDetail: object({
+    ...run,
+    steps: {
+      type: "array",
+      maxItems: 8,
+      items: object({
+        id: text,
+        step: integer,
+        stage: text,
+        createdAt: date,
+        ...stage,
+      }),
+    },
+  }),
+  OpsRetry: object({
+    runId: text,
+    status: { const: "QUEUED" },
+    mode: { type: "string", enum: ["mock", "live"] },
+    retriesRunId: text,
+  }),
+  OpsTransaction: object({
+    id: text,
+    claimId: text,
+    invoiceNumber: text,
+    organizationName: text,
+    sender: text,
+    action: text,
+    status: {
+      type: "string",
+      enum: [
+        "PREPARED",
+        "SUBMITTED",
+        "MINED",
+        "CONFIRMED",
+        "REVERTED",
+        "REPLACED",
+        "DROPPED_OR_UNKNOWN",
+      ],
+    },
+    txHash: nullableText,
+    replacesIntentId: nullableText,
+    createdAt: date,
+    updatedAt: date,
+  }),
+  OpsTransactionPage: page("OpsTransaction"),
+  OpsOrganization: object({
+    id: text,
+    name: text,
+    kind: text,
+    status: text,
+    isSynthetic: bool,
+    memberships: {
+      type: "array",
+      items: object({
+        id: text,
+        userId: text,
+        role: text,
+        approved: bool,
+        wallets: strings,
+      }),
+    },
+  }),
+  OpsOrganizationPage: page("OpsOrganization"),
+  OpsAudit: object({
+    id: text,
+    actorId: text,
+    organizationId: nullableText,
+    action: text,
+    target: text,
+    beforeHash: nullableText,
+    afterHash: nullableText,
+    correlationId: text,
+    createdAt: date,
+  }),
+  OpsAuditPage: page("OpsAudit", { integrityDisclosure: text }),
+};
+export const opsResponses: Record<string, string> = {
+  "/v1/ops/status": "OpsStatus",
+  "/v1/ops/agent-runs": "OpsRunPage",
+  "/v1/ops/agent-runs/{id}": "OpsRunDetail",
+  "/v1/ops/agent-runs/{id}/retry": "OpsRetry",
+  "/v1/ops/transactions": "OpsTransactionPage",
+  "/v1/ops/organizations": "OpsOrganizationPage",
+  "/v1/ops/audit": "OpsAuditPage",
+};

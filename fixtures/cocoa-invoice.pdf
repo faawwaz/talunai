@@ -1,0 +1,53 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 867 >>
+stream
+BT /F1 8 Tf 40 790 Td 14 TL
+(isSynthetic: true) Tj T*
+(locale: id-ID) Tj T*
+(dateFormat: YYYY-MM-DD) Tj T*
+(issuerName: Koperasi Kakao Sintetis) Tj T*
+(buyerName: Pembeli Kakao Sintetis) Tj T*
+(invoiceNumber: KAKAO/2026/001) Tj T*
+(issueDate: 2026-09-28) Tj T*
+(invoiceDueDate: 2026-11-12) Tj T*
+(currency: IDR) Tj T*
+(invoiceOriginalAmount: 120.000.000) Tj T*
+(previouslyPaidAmount: 20.000.000) Tj T*
+(acceptedOutstandingAmount: 100.000.000) Tj T*
+(goodsDescription: kakao) Tj T*
+(goodsCategory: COCOA) Tj T*
+(quantity: 10) Tj T*
+(quantityUnit: ton) Tj T*
+(purchaseOrderReference: PO-DEMO-001) Tj T*
+(proofOfDeliveryReference: POD-DEMO-001 barang diterima 2026-09-28) Tj T*
+(buyerAcknowledgementReference: ACK-DEMO-001 buyer mengakui outstanding 100.000.000 IDR) Tj T*
+(disclosure: SELURUH IDENTITAS DAN DOKUMEN FIKTIF. BUKAN PIUTANG ATAU PEMBAYARAN NYATA.) Tj T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1229
+%%EOF

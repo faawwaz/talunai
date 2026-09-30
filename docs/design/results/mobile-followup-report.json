@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-09-28T17:19:08.972Z",
+  "baseUrl": "https://localhost:3000",
+  "chainId": 97,
+  "isSynthetic": true,
+  "providerMode": "mock",
+  "walletMode": "NODE_SIWE_AND_EXACT_CONSENTS_NO_BROADCAST_NO_KEYS_IN_BROWSER",
+  "browser": "Chromium",
+  "browserErrors": [],
+  "screenshotsAreVisualBaselines": false,
+  "fixtures": [],
+  "mockedResponses": [],
+  "passed": 1,
+  "failed": 0,
+  "results": [
+    {
+      "name": "authorized overview remains readable and accessible on desktop and mobile",
+      "status": "PASSED",
+      "durationMs": 2727
+    }
+  ]
+}

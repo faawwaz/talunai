@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.env*
+.local
+graft
+contracts/out
+contracts/cache
+dist
+.private
+.agents
+video
+pitch
+demo-artifacts
+coverage
+*.pem
+*.key

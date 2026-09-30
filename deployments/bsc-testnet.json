@@ -1,0 +1,67 @@
+{
+  "project": "TALUNAI",
+  "chainId": 97,
+  "isSynthetic": true,
+  "createdAt": "2026-09-28T15:34:06.191Z",
+  "compiler": "0.8.28",
+  "evmVersion": "paris",
+  "registry": "0xec653cdf649f0de749ffcf9bf3368ff6bce710d5",
+  "vault": "0x47738dc96cb3de00da06cad6e5b16187af3c4c32",
+  "executor": "0x333584518018c6529902cf2f83376128509201bc",
+  "token": "0x96125aaad931266f1d7bacfa54e1915993ca8c4d",
+  "deploymentStartBlock": "133694805",
+  "actors": {
+    "admin": "0x1BA82a555423625Ae5acd470cA1E306B483dd176",
+    "verifier": "0xe75aA4D8ffb71746a9802fB9969b927dc1D18DBF",
+    "agent": "0x954Da57Aeec71b02c0A9369c0C3ED6D21F460aDd",
+    "lender": "0xc49dcA73553AB463eBFa352587856bd72B3B0019",
+    "buyer": "0x3019C6A59621b7B2150FE969B90ff6545aED14fB",
+    "borrower": "0xBD07a5dEF43dA0672C7E2Ec83500FDE93eA06F4c"
+  },
+  "transactions": [
+    {
+      "name": "MockIDR",
+      "address": "0x96125aaad931266f1d7bacfa54e1915993ca8c4d",
+      "txHash": "0xe70bbc6184eee5c648c4231c0825f9086331518443c6603392e1edfd7e6016a2",
+      "blockNumber": "133694805"
+    },
+    {
+      "name": "RWARegistry",
+      "address": "0xec653cdf649f0de749ffcf9bf3368ff6bce710d5",
+      "txHash": "0x971dc45ede0a27b0d0c19b966304d0bbcc67b8b688fb35adbaf78a72cb8a89cc",
+      "blockNumber": "133694817"
+    },
+    {
+      "name": "FinancingVault",
+      "address": "0x47738dc96cb3de00da06cad6e5b16187af3c4c32",
+      "txHash": "0xb8a324f0b240c648abe9421be6e329dfff49ae6367a439622f6948b9ef66efb6",
+      "blockNumber": "133694829"
+    },
+    {
+      "name": "AgentExecutor",
+      "address": "0x333584518018c6529902cf2f83376128509201bc",
+      "txHash": "0xb19ebc41de738fbb5efca710d9251622453131365f40ec1e1bb05110b2d949a5",
+      "blockNumber": "133694841"
+    },
+    {
+      "name": "configureEndpoints",
+      "txHash": "0x54ab5cd8c4f2e07d75ab7dad855f99a5073d8bdbad6cf33db545a62ff76d4f18",
+      "blockNumber": "133694856"
+    },
+    {
+      "name": "grantRole",
+      "txHash": "0x34b1a96fe8b5b8498ba6565c2967d7d15810eb497d8cff2af45e69c5aa09c0cc",
+      "blockNumber": "133694866"
+    },
+    {
+      "name": "mint",
+      "txHash": "0x614a51886fb833fda050ee63cfba0ab616277b933090f645bd03765c9df5dfff",
+      "blockNumber": "133694879"
+    },
+    {
+      "name": "mint",
+      "txHash": "0x0c42d87d6cd14b54eb0b04ec308984a126ad8f5021dbef2cd3c7cb71471c0e8c",
+      "blockNumber": "133694891"
+    }
+  ]
+}

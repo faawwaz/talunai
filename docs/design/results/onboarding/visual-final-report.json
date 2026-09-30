@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-28T17:59:11.304Z",
+  "checks": [
+    {
+      "name": "Read-only example opens without wallet and uses both goods categories",
+      "status": "PASSED"
+    },
+    {
+      "name": "New wallet signs in and sees actionable organization form",
+      "status": "PASSED"
+    }
+  ],
+  "pageErrors": [],
+  "onchainTransactionsSent": 0
+}
