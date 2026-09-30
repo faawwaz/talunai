@@ -28,7 +28,7 @@ Gunakan proyek Supabase terpisah untuk demo ini. Salin URI database dari panel *
 
 **Jangan memakai transaction pooler port 6543 dengan konfigurasi saat ini.** Driver masih menggunakan prepared statements. Dokumentasi Supabase juga mencatat interaksi pipelining `postgres.js` dengan shared transaction pooler. Perubahan driver/pooling perlu diuji terhadap transaksi dan advisory lock Talunai dahulu.
 
-Web memiliki dua pool: default Vercel raw SQL 2 koneksi dan Drizzle 1 per instance (lokal 12 + 4). Atur `DATABASE_POOL_MAX`, `DATABASE_ORM_POOL_MAX`, serta `WORKER_DATABASE_POOL_MAX` (default pg-boss 5). Total koneksi tetap bertambah dengan jumlah instance.
+Web memiliki dua pool: default Vercel raw SQL 1 koneksi dan Drizzle 1 per instance (lokal 12 + 4). Atur `DATABASE_POOL_MAX`, `DATABASE_ORM_POOL_MAX`, serta `WORKER_DATABASE_POOL_MAX` (default pg-boss 5). Total koneksi tetap bertambah dengan jumlah instance. Di Vercel, idle timeout 2 detik dan hook `after()` memberi waktu 2,5 detik setelah response agar koneksi idle tertutup sebelum instance dibekukan. Jangan memanggil `pool.end()` per request karena dapat memutus request lain. Region Vercel `icn1` berdekatan dengan Supabase Seoul.
 
 Untuk pooler dengan CA Supabase, isi `DATABASE_SSL_CA_BASE64` dengan PEM CA resmi yang di-base64. Verifikasi TLS tetap aktif. Jangan memakai `rejectUnauthorized=false`, dan hindari parameter `sslmode` di URL saat menggunakan CA eksplisit karena parser node-pg dapat menggantinya.
 
@@ -67,7 +67,7 @@ Masukkan melalui Vercel Project Settings → Environment Variables. Jangan mengu
 | `SUPABASE_SERVICE_ROLE_KEY`                   | Secret server untuk bucket privat; jangan `NEXT_PUBLIC_*`                                              |
 | `SUPABASE_STORAGE_BUCKET`                     | `talunai-documents`, public=false                                                                      |
 | `DATABASE_SSL_CA_BASE64`                      | CA resmi Supabase dalam base64, TLS diverifikasi                                                       |
-| `DATABASE_POOL_MAX` / `DATABASE_ORM_POOL_MAX` | `2` / `1`                                                                                              |
+| `DATABASE_POOL_MAX` / `DATABASE_ORM_POOL_MAX` | `1` / `1`                                                                                              |
 
 Vercel membatasi request/response function hingga 4,5 MB. Batas 4.000.000 byte memberi ruang untuk multipart, dengan storage bersama Supabase. Upload lebih besar memerlukan alur upload langsung dengan otorisasi, validasi, dan finalisasi yang sesuai.
 
