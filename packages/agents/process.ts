@@ -15,7 +15,8 @@ import {
   validateAndNormalizeExtraction,
   extractDeterministic,
 } from "./extraction";
-import { FileDocumentStorage, parseDocument } from "./documents";
+import { parseDocument } from "./documents";
+import { documentStorage } from "./storage";
 
 export type ProcessClaimInput = {
   claimId: string;
@@ -105,9 +106,7 @@ export async function processClaim({
     if (!Number.isFinite(timeoutMs) || timeoutMs < 1)
       throw new Error("AGENT_TIMEOUT_CONFIGURATION_INVALID");
     const processingDeadline = Date.now() + timeoutMs;
-    const storage = new FileDocumentStorage(
-      process.env.DOCUMENT_STORAGE_ROOT ?? "./.private/documents",
-    );
+    const storage = documentStorage();
     const parsedRows: Array<{
       id: string;
       extracted_text: string;

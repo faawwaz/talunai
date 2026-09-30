@@ -1,6 +1,7 @@
 import { PgBoss } from "pg-boss";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { getSql, closeDb } from "../../packages/db";
+import { databaseTls, poolSize } from "../../packages/db/pool-config";
 import {
   processClaim,
   type ProcessClaimInput,
@@ -22,6 +23,8 @@ const queues = [
 const sql = getSql();
 const boss = new PgBoss({
   connectionString: process.env.DATABASE_URL!,
+  ssl: databaseTls(),
+  max: poolSize("WORKER_DATABASE_POOL_MAX", 5),
   schema: "pgboss",
 });
 boss.on("error", () =>

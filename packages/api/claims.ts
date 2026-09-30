@@ -29,10 +29,8 @@ import {
   toChainClaim,
   versionCheck,
 } from "./core";
-import {
-  FileDocumentStorage,
-  validateDocumentEnvelope,
-} from "../agents/documents";
+import { validateDocumentEnvelope } from "../agents/documents";
+import { documentStorage } from "../agents/storage";
 const money = z
   .string()
   .regex(/^(0|[1-9][0-9]{0,77})$/)
@@ -488,7 +486,7 @@ export async function uploadDocument(
     status: "PENDING_PARSE",
     pages: null,
   };
-  const storage = new FileDocumentStorage(cfg.DOCUMENT_STORAGE_ROOT);
+  const storage = documentStorage();
   const stored = await storage.put(bytes);
   let committed = false;
   try {
@@ -589,10 +587,8 @@ export async function readDocument(actor: Actor, documentId: string) {
   if (!rows.length) throw new ApiError(404, "DOCUMENT_NOT_FOUND");
   const doc = rows[0];
   await authorizedClaim(actor, doc.claim_id);
-  const bytes = await new FileDocumentStorage(
-    config().DOCUMENT_STORAGE_ROOT,
-  ).get(doc.storage_key);
-  return new Response(bytes, {
+  const bytes = await documentStorage().get(doc.storage_key);
+  return new Response(new Uint8Array(bytes), {
     headers: {
       "content-type": doc.mime,
       "content-disposition": `attachment; filename="document${doc.mime === "application/pdf" ? ".pdf" : ".txt"}"`,

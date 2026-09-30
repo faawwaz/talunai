@@ -7,9 +7,9 @@ Repository ini adalah aplikasi Next.js di root, bukan workspace `video/`. `verce
 **Vercel + Supabase Database saja belum menjalankan seluruh flow.** Dua kebutuhan runtime masih harus dipenuhi sebelum menerima upload/pembiayaan melalui deployment publik:
 
 1. **Worker persisten:** `apps/worker/main.ts` menjalankan pg-boss, OpenRouter, parsing dokumen, indexer, dan rekonsiliasi transaksi. Jalankan sebagai proses Node terpisah pada host/container yang selalu hidup. Ia tidak dijalankan oleh build atau request Vercel.
-2. **Storage dokumen bersama:** implementasi sekarang memakai `FileDocumentStorage` di disk privat. Web dan worker harus membaca file yang sama. Adapter Supabase Storage belum diimplementasikan; menambah env Storage atau menunjuk ke `/tmp` tidak menggantikannya. Untuk Vercel, implementasikan adapter bucket privat, migrasikan file lama, dan uji upload → worker → pembacaan terotorisasi sebelum mengaktifkan flow publik.
+2. **Storage dokumen bersama:** `packages/agents/storage.ts` menyediakan adapter bucket privat Supabase. Pilih `DOCUMENT_STORAGE_DRIVER=supabase` pada web dan worker. Byte dokumen dan salt disimpan privat; unduhan pengguna tetap melalui otorisasi API Talunai. Vercel menolak fallback ke filesystem. Data lama harus dipindahkan beserta salt dan storage key yang sama.
 
-Pilihan yang sudah sesuai arsitektur sekarang: web + worker pada host/container dengan volume dokumen bersama, memakai Supabase sebagai PostgreSQL. Vercel bisa menjadi target web setelah adapter storage selesai. Panduan ini tidak mengklaim bahwa deployment cloud atau migrasi data sudah dilakukan.
+Adapter filesystem tetap tersedia untuk lokal. Build sukses saja tidak membuktikan bahwa migrasi atau deployment runtime selesai; verifikasi dengan pemeriksaan di bagian akhir.
 
 ## 1. Import repository ke Vercel
 
@@ -28,41 +28,48 @@ Gunakan proyek Supabase terpisah untuk demo ini. Salin URI database dari panel *
 
 **Jangan memakai transaction pooler port 6543 dengan konfigurasi saat ini.** Driver masih menggunakan prepared statements. Dokumentasi Supabase juga mencatat interaksi pipelining `postgres.js` dengan shared transaction pooler. Perubahan driver/pooling perlu diuji terhadap transaksi dan advisory lock Talunai dahulu.
 
-Web memiliki dua pool: raw SQL maksimum 12 koneksi dan Drizzle maksimum 4 koneksi per instance. Worker juga memakai raw SQL serta pool pg-boss. Perhitungkan limit koneksi sebelum menambah instance; konfigurasi ini belum dituning untuk skala serverless besar.
+Web memiliki dua pool: default Vercel raw SQL 2 koneksi dan Drizzle 1 per instance (lokal 12 + 4). Atur `DATABASE_POOL_MAX`, `DATABASE_ORM_POOL_MAX`, serta `WORKER_DATABASE_POOL_MAX` (default pg-boss 5). Total koneksi tetap bertambah dengan jumlah instance.
 
-**Nonaktifkan Supabase Data API** pada proyek khusus ini, atau keluarkan seluruh schema aplikasi dan `pgboss` dari exposed schemas. Talunai memakai API Next.js dengan SIWE/RBAC, bukan Supabase Auth/PostgREST. Tabel sesi, dokumen, dan keuangan tidak boleh terekspos lewat Data API tanpa RLS yang sesuai. Jangan memasukkan URL database atau secret ke variabel `NEXT_PUBLIC_*`.
+Untuk pooler dengan CA Supabase, isi `DATABASE_SSL_CA_BASE64` dengan PEM CA resmi yang di-base64. Verifikasi TLS tetap aktif. Jangan memakai `rejectUnauthorized=false`, dan hindari parameter `sslmode` di URL saat menggunakan CA eksplisit karena parser node-pg dapat menggantinya.
+
+**Lindungi Data API Supabase:** nonaktifkan bila tidak dipakai, atau aktifkan RLS tanpa policy publik pada seluruh tabel aplikasi dan cabut hak schema/tabel/function dari `anon` dan `authenticated`. `pgboss` tidak boleh menjadi exposed schema. Talunai memakai API Next.js dengan SIWE/RBAC, bukan Supabase Auth/PostgREST. Tabel sesi, dokumen, dan keuangan tidak boleh terekspos lewat Data API tanpa RLS yang sesuai. Jangan memasukkan URL database atau secret ke variabel `NEXT_PUBLIC_*`.
 
 ## 3. Env web
 
 Masukkan melalui Vercel Project Settings → Environment Variables. Jangan mengunggah `.env.local` atau mengubah file lokal menjadi konfigurasi cloud.
 
-| Variabel | Nilai / cara mengisi |
-| --- | --- |
-| `APP_ENV` | `testnet` (bukan `production`; ini jaringan aset uji) |
-| `DATABASE_URL` | URI direct/session pooler Supabase dengan password yang di-URL-encode dan TLS |
-| `APP_ORIGIN` | `https://domain-demo-anda` tanpa trailing slash |
-| `SIWE_DOMAIN` | `domain-demo-anda` tanpa protokol |
-| `SIWE_URI` | Sama dengan `APP_ORIGIN` |
-| `SESSION_SECRET` | Secret acak minimum 32 karakter |
-| `CLAIM_ID_HMAC_KEY` | Secret acak minimum 32 karakter; pertahankan key lama jika memindahkan database yang sudah berisi Deal |
-| `CLAIM_ID_HMAC_KEY_VERSION` | `1`, atau versi yang sama dengan database yang dipindahkan |
-| `CHAIN_ID` | `97` |
-| `RPC_HTTP_URL` | RPC BNB Chain Testnet dengan dukungan histori yang dibutuhkan indexer |
-| `RPC_FALLBACK_HTTP_URL` | RPC testnet kedua, opsional |
-| `CHAIN_CONFIRMATIONS` | `3` |
-| `INDEXER_RESCAN_BLOCKS` | `64` |
-| `CONTRACT_REGISTRY_ADDRESS` | `registry` dari manifest testnet |
-| `CONTRACT_VAULT_ADDRESS` | `vault` dari manifest testnet |
-| `CONTRACT_AGENT_EXECUTOR_ADDRESS` | `executor` dari manifest testnet |
-| `MOCK_IDR_ADDRESS` | `token` dari manifest testnet |
-| `DEPLOYMENT_START_BLOCK` | `deploymentStartBlock` dari manifest testnet |
-| `LLM_MODE` | `live` |
-| `OPENROUTER_MODEL` | `openai/gpt-4.1` (harus sama dengan worker) |
-| `DOCUMENT_MAX_BYTES` | `4000000` untuk upload melalui Vercel; gunakan batas sama pada worker |
-| `DOCUMENT_MAX_PAGES` | `20` |
-| `DOCUMENT_STORAGE_ROOT` | Hanya untuk host dengan disk bersama; bukan solusi penyimpanan Vercel |
+| Variabel                                      | Nilai / cara mengisi                                                                                   |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `APP_ENV`                                     | `testnet` (bukan `production`; ini jaringan aset uji)                                                  |
+| `DATABASE_URL`                                | URI direct/session pooler Supabase dengan password yang di-URL-encode dan TLS                          |
+| `APP_ORIGIN`                                  | `https://domain-demo-anda` tanpa trailing slash                                                        |
+| `SIWE_DOMAIN`                                 | `domain-demo-anda` tanpa protokol                                                                      |
+| `SIWE_URI`                                    | Sama dengan `APP_ORIGIN`                                                                               |
+| `SESSION_SECRET`                              | Secret acak minimum 32 karakter                                                                        |
+| `CLAIM_ID_HMAC_KEY`                           | Secret acak minimum 32 karakter; pertahankan key lama jika memindahkan database yang sudah berisi Deal |
+| `CLAIM_ID_HMAC_KEY_VERSION`                   | `1`, atau versi yang sama dengan database yang dipindahkan                                             |
+| `CHAIN_ID`                                    | `97`                                                                                                   |
+| `RPC_HTTP_URL`                                | RPC BNB Chain Testnet dengan dukungan histori yang dibutuhkan indexer                                  |
+| `RPC_FALLBACK_HTTP_URL`                       | RPC testnet kedua, opsional                                                                            |
+| `CHAIN_CONFIRMATIONS`                         | `3`                                                                                                    |
+| `INDEXER_RESCAN_BLOCKS`                       | `64`                                                                                                   |
+| `CONTRACT_REGISTRY_ADDRESS`                   | `registry` dari manifest testnet                                                                       |
+| `CONTRACT_VAULT_ADDRESS`                      | `vault` dari manifest testnet                                                                          |
+| `CONTRACT_AGENT_EXECUTOR_ADDRESS`             | `executor` dari manifest testnet                                                                       |
+| `MOCK_IDR_ADDRESS`                            | `token` dari manifest testnet                                                                          |
+| `DEPLOYMENT_START_BLOCK`                      | `deploymentStartBlock` dari manifest testnet                                                           |
+| `LLM_MODE`                                    | `live`                                                                                                 |
+| `OPENROUTER_MODEL`                            | `openai/gpt-4.1` (harus sama dengan worker)                                                            |
+| `DOCUMENT_MAX_BYTES`                          | `4000000` untuk upload melalui Vercel; gunakan batas sama pada worker                                  |
+| `DOCUMENT_MAX_PAGES`                          | `20`                                                                                                   |
+| `DOCUMENT_STORAGE_DRIVER`                     | `supabase`                                                                                             |
+| `SUPABASE_URL`                                | URL proyek Supabase                                                                                    |
+| `SUPABASE_SERVICE_ROLE_KEY`                   | Secret server untuk bucket privat; jangan `NEXT_PUBLIC_*`                                              |
+| `SUPABASE_STORAGE_BUCKET`                     | `talunai-documents`, public=false                                                                      |
+| `DATABASE_SSL_CA_BASE64`                      | CA resmi Supabase dalam base64, TLS diverifikasi                                                       |
+| `DATABASE_POOL_MAX` / `DATABASE_ORM_POOL_MAX` | `2` / `1`                                                                                              |
 
-Vercel membatasi request/response function hingga 4,5 MB. Batas 4.000.000 byte memberi ruang untuk multipart, tetapi **tidak menyelesaikan kebutuhan storage bersama**. Upload lebih besar memerlukan alur upload langsung dengan otorisasi, validasi, dan finalisasi yang sesuai.
+Vercel membatasi request/response function hingga 4,5 MB. Batas 4.000.000 byte memberi ruang untuk multipart, dengan storage bersama Supabase. Upload lebih besar memerlukan alur upload langsung dengan otorisasi, validasi, dan finalisasi yang sesuai.
 
 Jangan memasukkan `OPENROUTER_API_KEY`, `AGENT_PRIVATE_KEY`, maupun key peserta ke env web. Domain login harus persis sesuai env: preview Vercel dengan hostname berbeda memerlukan konfigurasi/lingkungan tersendiri. Tetapkan satu domain demo stabil untuk SIWE.
 
@@ -130,7 +137,7 @@ Jangan menjalankan `demo:run` pada database cloud aktif untuk berpura-pura mengi
 - Upload PDF → analisis worker → lihat dokumen kembali melalui API terotorisasi.
 - Jalankan satu Deal baru yang terisolasi untuk memverifikasi persetujuan, pendanaan, pembayaran, dan penarikan.
 
-Build sukses tidak membuktikan seluruh runtime siap. Sampai host worker, adapter storage, dan env cloud diisi, deployment publik belum dianggap lulus end-to-end.
+Build sukses tidak membuktikan seluruh runtime siap. Adapter cloud memiliki unit test privasi, traversal, rollback, dan roundtrip commitment. Retensi orphan di cloud belum otomatis; cleanup lokal tidak menyentuh bucket. Deployment tetap harus lulus pengujian runtime setelah migrasi.
 
 ## Sumber resmi
 

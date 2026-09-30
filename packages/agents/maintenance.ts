@@ -5,6 +5,9 @@ import { FileDocumentStorage } from "./documents";
 /** Only unreferenced generated files older than an hour are removed. Referenced evidence
  * retention is recorded, not automatically destroyed while a financing dispute exists. */
 export async function cleanAbandonedUploads() {
+  // Cloud retention needs a bucket inventory and database reference check.
+  // Never infer cloud deletion candidates from a machine's local directory.
+  if (process.env.DOCUMENT_STORAGE_DRIVER === "supabase") return 0;
   const storage = new FileDocumentStorage(
     process.env.DOCUMENT_STORAGE_ROOT ?? "./.local/documents",
   );
