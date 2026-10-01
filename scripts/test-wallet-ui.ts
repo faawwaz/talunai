@@ -77,6 +77,9 @@ try {
     .getByRole("button", { name: "WalletConnect", exact: true })
     .click();
   // QR is generated from a real WalletConnect pairing URI, never a placeholder.
+  await expect(page.getByRole("dialog")).toContainText(/Pindai|Scan/, {
+    timeout: 30_000,
+  });
   await expect(
     page
       .getByRole("dialog")
@@ -84,7 +87,6 @@ try {
       .filter({ visible: true })
       .last(),
   ).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByRole("dialog")).toContainText(/Pindai|Scan/);
   await stableCapture(page, "walletconnect-qr");
   assert.deepEqual(pageErrors, []);
   await visual.close();
@@ -109,6 +111,17 @@ try {
   const auth = await context.newPage();
   const authErrors: string[] = [];
   auth.on("pageerror", (error) => authErrors.push(error.message));
+  await auth.goto(`${baseUrl}/app`);
+  await expect(
+    auth
+      .getByRole("button", { name: "Masuk dengan wallet", exact: true })
+      .first(),
+  ).toBeVisible();
+  assert.equal(
+    control.requests.eth_accounts ?? 0,
+    0,
+    "A fresh visit must not auto-connect another provider in the background",
+  );
   await openWalletLogin(auth, baseUrl);
   await auth.getByRole("button", { name: "Kirim pesan", exact: true }).click();
   await expect.poll(() => control.requests.personal_sign ?? 0).toBe(1);
@@ -133,6 +146,16 @@ try {
   await auth.screenshot({ path: `${output}/connected-mobile.png` });
   console.log(
     "PASS rejected signature recovery and selected provider isolation",
+  );
+  const signaturesBeforeReload = control.requests.personal_sign;
+  await auth.reload();
+  await expect(
+    auth.getByRole("button", { name: /Kelola wallet/ }),
+  ).toBeVisible();
+  assert.equal((await request(auth, "/v1/me")).status, 200);
+  assert.equal(control.requests.personal_sign, signaturesBeforeReload);
+  console.log(
+    "PASS chosen wallet reconnects after reload without another signature",
   );
   await auth.getByRole("button", { name: /Kelola wallet/ }).click();
   await stableCapture(auth, "wallet-account");

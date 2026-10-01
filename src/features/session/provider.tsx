@@ -32,8 +32,8 @@ import {
   useConnectModal,
   useChainModal,
 } from "@rainbow-me/rainbowkit";
-import { WagmiProvider, useAccount, useConfig } from "wagmi";
-import { disconnect, getAccount } from "wagmi/actions";
+import { WagmiProvider, useAccount, useConfig, useConnectors } from "wagmi";
+import { disconnect, getAccount, reconnect } from "wagmi/actions";
 import { createWalletConfig, walletTheme } from "./wallet-config";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./wallet.css";
@@ -114,6 +114,8 @@ function SessionState({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const wagmiConfig = useConfig();
   const account = useAccount();
+  const connectors = useConnectors();
+  const attemptedReconnect = useRef(false);
   const generation = useRef(0);
   const pendingChallenge = useRef<{
     challengeId: string;
@@ -147,6 +149,25 @@ function SessionState({ children }: { children: ReactNode }) {
   });
   const user = locallyLocked ? null : (sessionQuery.data ?? null);
   const config = configQuery.data;
+  useEffect(() => {
+    // Restore only the previously chosen connector, after session bootstrap.
+    // Scanning every wallet can wait on unrelated QR providers and replace a
+    // wallet the user just selected while their login signature is in flight.
+    if (sessionQuery.isPending || attemptedReconnect.current) return;
+    let cancelled = false;
+    void (async () => {
+      const recent = await wagmiConfig.storage?.getItem("recentConnectorId");
+      if (cancelled || !recent || attemptedReconnect.current) return;
+      const connector = connectors.find((item) => item.id === recent);
+      if (!connector) return; // EIP-6963 discovery may still be arriving.
+      attemptedReconnect.current = true;
+      if (getAccount(wagmiConfig).status !== "disconnected") return;
+      await reconnect(wagmiConfig, { connectors: [connector] });
+    })().catch(() => undefined); // An unavailable wallet can be selected again.
+    return () => {
+      cancelled = true;
+    };
+  }, [connectors, sessionQuery.isPending, wagmiConfig]);
   useEffect(() => {
     redirectToConfiguredOrigin(config?.appOrigin);
   }, [config?.appOrigin]);
@@ -524,7 +545,7 @@ function WalletNetwork({ children }: { children: ReactNode }) {
       </div>
     );
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
       <SessionState>{children}</SessionState>
     </WagmiProvider>
   );
