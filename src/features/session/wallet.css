@@ -1,0 +1,117 @@
+/* RainbowKit owns modal layout, focus trapping, touch and wallet handoff. */
+[data-rk] button:focus-visible,
+[data-rk] a:focus-visible,
+.wallet-account-button:focus-visible {
+  outline: 2px solid #176653;
+  outline-offset: 4px;
+}
+
+[data-rk] button[aria-label="Close"]::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+.wallet-bootstrap {
+  display: grid;
+  min-height: 65dvh;
+  align-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  color: #173b35;
+  background: #f7f8f2;
+}
+.talunai-wallet-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dce5dc;
+  border-radius: 50%;
+  background: #e7efe7;
+  color: #176653;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.wallet-bootstrap button {
+  min-height: 44px;
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  color: white;
+  background: #176653;
+  cursor: pointer;
+}
+
+.wallet-account-button {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #dce5dc;
+  border-radius: 10px;
+  color: #173b35;
+  background: #f7f8f2;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+.wallet-account-button:hover {
+  background: #e7efe7;
+  border-color: #b9cbbf;
+}
+.wallet-account-button:active {
+  background: #dce8dc;
+}
+.wallet-account-button .topbar-account-copy {
+  display: block;
+  text-align: left;
+}
+.wallet-account-button .topbar-wallet {
+  font-size: 0.75rem;
+}
+.wallet-account-button > svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.topbar-account .topbar-logout {
+  width: 44px;
+  height: 44px;
+}
+.workspace-topbar .topbar-connect {
+  min-height: 44px;
+}
+
+@media (max-width: 639px) {
+  .wallet-account-button {
+    gap: 0.4rem;
+    padding-inline: 0.5rem;
+  }
+  .wallet-account-button .topbar-role {
+    display: none;
+  }
+  .wallet-account-button > svg {
+    width: 14px;
+    height: 14px;
+  }
+  .wallet-account-button .topbar-wallet {
+    font-size: 0.6875rem;
+  }
+  [data-rk] [role="document"] {
+    max-height: calc(100dvh - 24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-rk] *,
+  [data-rk] *::before,
+  [data-rk] *::after,
+  .wallet-account-button {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

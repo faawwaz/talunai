@@ -30,6 +30,9 @@ type CheckResult = {
 type WalletControl = {
   rejectSignatures: boolean;
   requests: Record<string, number>;
+  authorized?: boolean;
+  activeAddress?: string;
+  activeChainId?: number;
   consent?: { claim: Claim; config: PublicConfig; role: "BORROWER" | "BUYER" };
 };
 type ApiResult<T> = { status: number; data: T };
@@ -43,6 +46,7 @@ export async function installWallet(
   baseUrl: string,
   control: WalletControl,
 ) {
+  control.authorized ??= false;
   await context.exposeBinding(
     "__talunaiTestWalletRequest",
     async (_source, input: unknown) => {
@@ -50,9 +54,29 @@ export async function installWallet(
       const method = request.method ?? "";
       control.requests[method] = (control.requests[method] ?? 0) + 1;
       if (method === "eth_chainId")
-        return { ok: true, value: `0x${chainId.toString(16)}` };
+        return {
+          ok: true,
+          value: `0x${(control.activeChainId ?? chainId).toString(16)}`,
+        };
+      if (method === "wallet_switchEthereumChain") {
+        control.activeChainId = Number(
+          (request.params?.[0] as { chainId: string }).chainId,
+        );
+        return { ok: true, value: null };
+      }
+      if (method === "wallet_revokePermissions") {
+        control.authorized = false;
+        return { ok: true, value: null };
+      }
+      if (method === "eth_requestAccounts") control.authorized = true;
       if (method === "eth_accounts" || method === "eth_requestAccounts")
-        return { ok: true, value: [account.address] };
+        return {
+          ok: true,
+          value:
+            control.authorized === false
+              ? []
+              : [control.activeAddress ?? account.address],
+        };
       if (method === "eth_signTypedData_v4") {
         if (control.rejectSignatures)
           return {
@@ -200,7 +224,7 @@ export async function installWallet(
   await context.addInitScript({
     content: `(() => {
     const listeners = new Map();
-    window.ethereum = {
+    const provider = {
       async request(request) {
         const response = await window.__talunaiTestWalletRequest(request);
         if (!response.ok) throw Object.assign(new Error(response.message), { code: response.code });
@@ -213,6 +237,21 @@ export async function installWallet(
       },
       removeListener(event, listener) { listeners.get(event)?.delete(listener); }
     };
+    window.ethereum = provider;
+    window.__talunaiTestWalletEmit = (event, value) => {
+      for (const listener of listeners.get(event) || []) listener(value);
+    };
+    const detail = Object.freeze({
+      info: {
+        uuid: '07b7e55b-94c0-40e8-98ba-e303fc35ba86',
+        name: 'Talunai Test Wallet',
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="32" height="32" rx="8" fill="%23176653"/></svg>',
+        rdns: 'test.talunai.wallet'
+      }, provider
+    });
+    const announce = () => window.dispatchEvent(new CustomEvent('eip6963:announceProvider', { detail }));
+    window.addEventListener('eip6963:requestProvider', announce);
+    announce();
   })();`,
   });
 }
@@ -264,19 +303,34 @@ function success<T>(result: ApiResult<T>): T {
   return result.data;
 }
 
-export async function login(page: Page, baseUrl: string) {
+export async function openWalletLogin(page: Page, baseUrl: string) {
   await page.goto(`${baseUrl}/app`, { waitUntil: "domcontentloaded" });
   const loginButton = page
     .getByRole("button", { name: "Masuk dengan wallet", exact: true })
     .first();
   await expect(loginButton).toBeVisible({ timeout: 30_000 });
+  await loginButton.click();
+  const wallet = page.getByRole("button", { name: /Talunai Test Wallet/ });
+  const sign = page.getByRole("button", { name: "Kirim pesan", exact: true });
+  await expect(wallet.or(sign).first()).toBeVisible();
+  if (await wallet.isVisible()) {
+    // A previously authorized injected connector may finish reconnecting while
+    // the picker is opening and move straight to the sign-in step.
+    await wallet.click({ timeout: 2_000 }).catch(async (error) => {
+      if (!(await sign.isVisible())) throw error;
+    });
+  }
+  await expect(sign).toBeVisible();
+}
+export async function login(page: Page, baseUrl: string) {
+  await openWalletLogin(page, baseUrl);
   await Promise.all([
     page.waitForResponse(
       (response) =>
         response.url().endsWith("/v1/auth/verify") && response.status() === 200,
       { timeout: 30_000 },
     ),
-    loginButton.click(),
+    page.getByRole("button", { name: "Kirim pesan", exact: true }).click(),
   ]);
   await expect(
     page.getByRole("button", { name: "Keluar dari sesi", exact: true }),
@@ -723,13 +777,14 @@ export async function runUiSmoke() {
       "rejected SIWE signature stays anonymous and displays recovery",
       async () => {
         wallet.rejectSignatures = true;
+        await openWalletLogin(page, baseUrl);
         await page
-          .getByRole("button", { name: "Masuk dengan wallet", exact: true })
-          .first()
+          .getByRole("button", { name: "Kirim pesan", exact: true })
           .click();
-        await expect(page.getByRole("alert").first()).toContainText(
-          /ditolak|dibatalkan/i,
-        );
+        // RainbowKit returns to a retryable sign-in step after a rejected prompt.
+        await expect(
+          page.getByRole("button", { name: "Kirim pesan", exact: true }),
+        ).toBeEnabled();
         assert.equal((await request(page, "/v1/me")).status, 401);
         wallet.rejectSignatures = false;
       },

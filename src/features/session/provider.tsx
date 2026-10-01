@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -24,6 +25,19 @@ import {
 import { anvil, bscTestnet } from "viem/chains";
 import { MotionConfig } from "motion/react";
 import {
+  createAuthenticationAdapter,
+  RainbowKitAuthenticationProvider,
+  RainbowKitProvider,
+  useAccountModal,
+  useConnectModal,
+  useChainModal,
+} from "@rainbow-me/rainbowkit";
+import { WagmiProvider, useAccount, useConfig } from "wagmi";
+import { disconnect, getAccount } from "wagmi/actions";
+import { createWalletConfig, walletTheme } from "./wallet-config";
+import "@rainbow-me/rainbowkit/styles.css";
+import "./wallet.css";
+import {
   TalunaiClient,
   TalunaiApiError,
   type Claim,
@@ -38,18 +52,6 @@ import {
   type TransactionContext,
 } from "@/lib/wallet-guards";
 
-type BrowserWallet = EIP1193Provider & {
-  on?: (event: string, listener: (...args: unknown[]) => void) => void;
-  removeListener?: (
-    event: string,
-    listener: (...args: unknown[]) => void,
-  ) => void;
-};
-declare global {
-  interface Window {
-    ethereum?: BrowserWallet;
-  }
-}
 type WalletStatus = "idle" | "connecting" | "signing" | "sending" | "ready";
 type Session = {
   api: TalunaiClient;
@@ -60,6 +62,8 @@ type Session = {
   error: string | null;
   connect: () => Promise<void>;
   logout: () => Promise<void>;
+  manageWallet: () => void;
+  getWalletProvider: () => Promise<EIP1193Provider>;
   signConsent: (
     typedData: Record<string, unknown>,
     claim: Claim,
@@ -84,11 +88,6 @@ function walletError(error: unknown): Error {
   }
   return error instanceof Error ? error : new Error("WALLET_REQUEST_FAILED");
 }
-function getProvider() {
-  if (!window.ethereum) throw new Error("WALLET_UNAVAILABLE");
-  return window.ethereum;
-}
-
 function redirectToConfiguredOrigin(origin?: string) {
   if (!origin || typeof window === "undefined") return false;
   const canonical = new URL(origin).origin;
@@ -99,8 +98,30 @@ function redirectToConfiguredOrigin(origin?: string) {
   return true;
 }
 
+function WalletAvatar({ address, size }: { address: string; size: number }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="talunai-wallet-avatar"
+      style={{ width: size, height: size, fontSize: size * 0.3 }}
+    >
+      {address.slice(2, 4).toUpperCase()}
+    </span>
+  );
+}
+
 function SessionState({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
+  const wagmiConfig = useConfig();
+  const account = useAccount();
+  const generation = useRef(0);
+  const pendingChallenge = useRef<{
+    challengeId: string;
+    message: string;
+    address: string;
+    generation: number;
+  } | null>(null);
+  const signingOut = useRef<Promise<void> | null>(null);
   const [api] = useState(() => new TalunaiClient(""));
   const [walletStatus, setWalletStatus] = useState<WalletStatus>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -129,102 +150,141 @@ function SessionState({ children }: { children: ReactNode }) {
   useEffect(() => {
     redirectToConfiguredOrigin(config?.appOrigin);
   }, [config?.appOrigin]);
-  const logout = useCallback(async () => {
-    setLocallyLocked(true);
-    await queryClient.cancelQueries();
-    queryClient.clear();
+  const clearPrivateQueries = useCallback(async () => {
+    await queryClient.cancelQueries({
+      predicate: (q) => q.queryKey[0] !== "public-config",
+    });
+    queryClient.removeQueries({
+      predicate: (q) =>
+        q.queryKey[0] !== "public-config" && q.queryKey[0] !== "session",
+    });
     queryClient.setQueryData(["session"], null);
+  }, [queryClient]);
+  const revokeSession = useCallback(() => {
+    if (signingOut.current) return signingOut.current;
+    generation.current++;
+    pendingChallenge.current = null;
+    setLocallyLocked(true);
     setWalletStatus("idle");
-    try {
-      await api.logout();
-      setError(null);
-    } catch (error) {
-      setError(
-        "Sesi lokal dikunci. Pencabutan sesi server belum berhasil; coba keluar kembali setelah koneksi pulih.",
-      );
-      throw error;
-    }
-  }, [api, queryClient]);
-  const connect = useCallback(async () => {
-    setError(null);
-    setWalletStatus("connecting");
-    try {
-      const cfg = config ?? (await api.config());
-      if (redirectToConfiguredOrigin(cfg.appOrigin)) {
-        setWalletStatus("idle");
-        return;
+    signingOut.current = (async () => {
+      await clearPrivateQueries();
+      try {
+        await api.logout();
+        setError(null);
+      } catch (error) {
+        setError(
+          "Sesi lokal dikunci. Pencabutan sesi server belum berhasil; coba keluar kembali setelah koneksi pulih.",
+        );
+        throw error;
+      } finally {
+        signingOut.current = null;
       }
-      const provider = getProvider();
-      const accounts = await provider.request({
-        method: "eth_requestAccounts",
-      });
-      const address = accounts[0];
-      if (!address) throw new Error("WALLET_UNAVAILABLE");
-      const currentChain = await provider.request({ method: "eth_chainId" });
-      if (Number.parseInt(currentChain, 16) !== cfg.chainId) {
+    })();
+    return signingOut.current;
+  }, [api, clearPrivateQueries]);
+  const logout = useCallback(async () => {
+    // Start revocation before disconnecting; RainbowKit's onDisconnect reuses it.
+    const revoke = revokeSession();
+    await Promise.all([revoke, disconnect(wagmiConfig)]);
+  }, [revokeSession, wagmiConfig]);
+  const authenticationAdapter = useMemo<
+    ReturnType<typeof createAuthenticationAdapter<string>>
+  >(
+    () => ({
+      // The backend creates and validates the nonce inside the exact SIWE message.
+      getNonce: async () => "server-issued",
+      createMessage: async ({ address, chainId }) => {
+        setError(null);
         try {
-          await provider.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: `0x${cfg.chainId.toString(16)}` }],
-          });
-        } catch (e) {
-          if ((e as { code?: number }).code !== 4902) throw e;
-          const chain = cfg.chainId === 97 ? bscTestnet : anvil;
-          await provider.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: `0x${cfg.chainId.toString(16)}`,
-                chainName: chain.name,
-                nativeCurrency: chain.nativeCurrency,
-                rpcUrls: [
-                  cfg.chainId === 97
-                    ? "https://bsc-testnet-rpc.publicnode.com"
-                    : "http://127.0.0.1:8545",
-                ],
-                ...(cfg.chainId === 97
-                  ? { blockExplorerUrls: ["https://testnet.bscscan.com"] }
-                  : {}),
-              },
-            ],
-          });
+          if (signingOut.current) await signingOut.current;
+          const cfg = config ?? (await api.config());
+          if (redirectToConfiguredOrigin(cfg.appOrigin))
+            throw new Error("WALLET_CHANGED");
+          if (chainId !== cfg.chainId) throw new Error("WRONG_CHAIN");
+          const attempt = ++generation.current;
+          const issued = await api.challenge(address, cfg.chainId);
+          if (attempt !== generation.current) throw new Error("WALLET_CHANGED");
+          pendingChallenge.current = {
+            ...issued,
+            address,
+            generation: attempt,
+          };
+          return issued.message;
+        } catch (error) {
+          setError(explainError(walletError(error)));
+          throw error;
         }
-      }
-      if (
-        Number.parseInt(
-          await provider.request({ method: "eth_chainId" }),
-          16,
-        ) !== cfg.chainId
-      )
-        throw new Error("WRONG_CHAIN");
-      const issued = await api.challenge(address, cfg.chainId);
-      setWalletStatus("signing");
-      const wallet = createWalletClient({
-        transport: custom(provider),
-        chain: cfg.chainId === 97 ? bscTestnet : anvil,
-      });
-      const signature = await wallet.signMessage({
-        account: address,
-        message: issued.message,
-      });
-      await api.verify(issued.challengeId, issued.message, signature);
-      const me = await api.me();
-      await queryClient.cancelQueries();
-      queryClient.clear();
-      queryClient.setQueryData(["public-config"], cfg);
-      queryClient.setQueryData(["session"], me);
-      setLocallyLocked(false);
-      setWalletStatus("ready");
-    } catch (e) {
-      const normalized = walletError(e);
-      setError(explainError(normalized));
-      setWalletStatus("idle");
-      throw normalized;
-    }
-  }, [api, config, queryClient]);
-  const getSigningWallet = useCallback(async () => {
+      },
+      verify: async ({ message, signature }) => {
+        const issued = pendingChallenge.current;
+        let verified = false;
+        try {
+          if (
+            !issued ||
+            issued.message !== message ||
+            issued.generation !== generation.current
+          )
+            throw new Error("WALLET_CHANGED");
+          const cfg = config ?? (await api.config());
+          const current = getAccount(wagmiConfig);
+          const provider = (await current.connector?.getProvider()) as
+            EIP1193Provider | undefined;
+          if (!provider) throw new Error("WALLET_UNAVAILABLE");
+          const assertCurrentWallet = async () => {
+            const [addresses, chain] = await Promise.all([
+              provider.request({ method: "eth_accounts" }),
+              provider.request({ method: "eth_chainId" }),
+            ]);
+            if (
+              issued.generation !== generation.current ||
+              getAccount(wagmiConfig).connector?.uid !==
+                current.connector?.uid ||
+              addresses[0]?.toLowerCase() !== issued.address.toLowerCase()
+            )
+              throw new Error("WALLET_CHANGED");
+            if (Number(chain) !== cfg.chainId) throw new Error("WRONG_CHAIN");
+          };
+          await assertCurrentWallet();
+          await api.verify(issued.challengeId, message, signature as Hex);
+          verified = true;
+          // Recheck after the network request: a changed account must not inherit
+          // a cookie produced by an older signature still in flight.
+          try {
+            await assertCurrentWallet();
+          } catch (error) {
+            await revokeSession();
+            throw error;
+          }
+          const me = await api.me();
+          if (me.wallet.toLowerCase() !== issued.address.toLowerCase())
+            throw new Error("WALLET_CHANGED");
+          await clearPrivateQueries();
+          await assertCurrentWallet();
+          queryClient.setQueryData(["session"], me);
+          pendingChallenge.current = null;
+          setLocallyLocked(false);
+          setWalletStatus("ready");
+          return true;
+        } catch (error) {
+          if (verified) await revokeSession().catch(() => undefined);
+          setError(explainError(walletError(error)));
+          return false;
+        }
+      },
+      // RainbowKit invokes this on disconnect / account change. Handle rejection
+      // here because the library does not await this callback.
+      signOut: async () => {
+        await revokeSession().catch(() => undefined);
+      },
+    }),
+    [api, config, clearPrivateQueries, queryClient, revokeSession, wagmiConfig],
+  );
+  const getWalletProvider = useCallback(async () => {
     if (!user || !config) throw new Error("WALLET_CHANGED");
-    const provider = getProvider();
+    const provider = (await getAccount(
+      wagmiConfig,
+    ).connector?.getProvider()) as EIP1193Provider | undefined;
+    if (!provider) throw new Error("WALLET_UNAVAILABLE");
     const [accounts, chain] = await Promise.all([
       provider.request({ method: "eth_accounts" }),
       provider.request({ method: "eth_chainId" }),
@@ -233,12 +293,17 @@ function SessionState({ children }: { children: ReactNode }) {
       throw new Error("WALLET_CHANGED");
     if (Number.parseInt(chain, 16) !== config.chainId)
       throw new Error("WRONG_CHAIN");
+    return provider;
+  }, [user, config, wagmiConfig]);
+  const getSigningWallet = useCallback(async () => {
+    const provider = await getWalletProvider();
+    if (!user || !config) throw new Error("WALLET_CHANGED");
     return createWalletClient({
       account: user.wallet,
       chain: config.chainId === 97 ? bscTestnet : anvil,
       transport: custom(provider),
     });
-  }, [user, config]);
+  }, [user, config, getWalletProvider]);
   const signConsent = useCallback(
     async (typedData: Record<string, unknown>, claim: Claim) => {
       setError(null);
@@ -280,18 +345,24 @@ function SessionState({ children }: { children: ReactNode }) {
     [config, user, getSigningWallet],
   );
   useEffect(() => {
-    const provider = window.ethereum;
-    if (!provider?.on) return;
-    const invalidate = () => {
-      if (user) void logout().catch(() => undefined);
-    };
-    provider.on("accountsChanged", invalidate);
-    provider.on("chainChanged", invalidate);
-    return () => {
-      provider.removeListener?.("accountsChanged", invalidate);
-      provider.removeListener?.("chainChanged", invalidate);
-    };
-  }, [user, logout]);
+    if (account.status === "reconnecting" || account.status === "connecting")
+      return;
+    if (
+      user &&
+      account.isConnected &&
+      (account.address.toLowerCase() !== user.wallet.toLowerCase() ||
+        (config && account.chainId !== config.chainId))
+    )
+      void revokeSession().catch(() => undefined);
+  }, [
+    account.status,
+    account.isConnected,
+    account.address,
+    account.chainId,
+    user,
+    config,
+    revokeSession,
+  ]);
   useEffect(
     () =>
       queryClient.getQueryCache().subscribe((event) => {
@@ -311,7 +382,7 @@ function SessionState({ children }: { children: ReactNode }) {
       }),
     [queryClient],
   );
-  const value = useMemo<Session>(
+  const value = useMemo<Omit<Session, "connect" | "manageWallet">>(
     () => ({
       api,
       config,
@@ -330,8 +401,8 @@ function SessionState({ children }: { children: ReactNode }) {
           : sessionQuery.error
             ? explainError(sessionQuery.error)
             : null),
-      connect,
       logout,
+      getWalletProvider,
       signConsent,
       sendTransaction,
     }),
@@ -345,16 +416,120 @@ function SessionState({ children }: { children: ReactNode }) {
       configQuery.error,
       walletStatus,
       error,
-      connect,
       logout,
+      getWalletProvider,
       signConsent,
       sendTransaction,
     ],
   );
   return (
-    <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
+    <RainbowKitAuthenticationProvider
+      adapter={authenticationAdapter}
+      status={
+        !locallyLocked && sessionQuery.isPending
+          ? "loading"
+          : user
+            ? "authenticated"
+            : "unauthenticated"
+      }
+    >
+      <RainbowKitProvider
+        locale="id-ID"
+        avatar={WalletAvatar}
+        theme={walletTheme}
+        modalSize="compact"
+        initialChain={config?.chainId}
+        appInfo={{ appName: "Talunai" }}
+      >
+        <SessionModals value={value}>{children}</SessionModals>
+      </RainbowKitProvider>
+    </RainbowKitAuthenticationProvider>
   );
 }
+
+function SessionModals({
+  children,
+  value,
+}: {
+  children: ReactNode;
+  value: Omit<Session, "connect" | "manageWallet">;
+}) {
+  const { openConnectModal } = useConnectModal();
+  const { openAccountModal } = useAccountModal();
+  const { openChainModal } = useChainModal();
+  const account = useAccount();
+  const connect = useCallback(async () => {
+    if (redirectToConfiguredOrigin(value.config?.appOrigin)) return;
+    if (
+      account.isConnected &&
+      account.chainId !== value.config?.chainId &&
+      openChainModal
+    )
+      openChainModal();
+    else if (openConnectModal) openConnectModal();
+    else openAccountModal?.();
+  }, [
+    account.isConnected,
+    account.chainId,
+    value.config,
+    openChainModal,
+    openConnectModal,
+    openAccountModal,
+  ]);
+  const session = useMemo<Session>(
+    () => ({
+      ...value,
+      connect,
+      manageWallet: () => {
+        if (openAccountModal) openAccountModal();
+        else void connect();
+      },
+    }),
+    [value, connect, openAccountModal],
+  );
+  return (
+    <SessionContext.Provider value={session}>
+      {children}
+    </SessionContext.Provider>
+  );
+}
+
+function WalletNetwork({ children }: { children: ReactNode }) {
+  const [api] = useState(() => new TalunaiClient(""));
+  const config = useQuery({
+    queryKey: ["public-config"],
+    queryFn: () => api.config(),
+    staleTime: 60_000,
+    retry: 1,
+  });
+  const chainId = config.data?.chainId;
+  const wagmiConfig = useMemo(
+    () => (chainId ? createWalletConfig(chainId) : null),
+    [chainId],
+  );
+  if (!wagmiConfig)
+    return (
+      <div
+        className="wallet-bootstrap"
+        role={config.error ? "alert" : "status"}
+      >
+        <p>
+          {config.error ? "Koneksi belum tersedia" : "Menyiapkan workspace…"}
+        </p>
+        {config.error && (
+          <button type="button" onClick={() => void config.refetch()}>
+            Coba lagi
+          </button>
+        )}
+      </div>
+    );
+  return (
+    <WagmiProvider config={wagmiConfig}>
+      <SessionState>{children}</SessionState>
+    </WagmiProvider>
+  );
+}
+
 export function AppProviders({ children }: { children: ReactNode }) {
   const [client] = useState(
     () =>
@@ -372,7 +547,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={client}>
       <MotionConfig reducedMotion="user">
-        <SessionState>{children}</SessionState>
+        <WalletNetwork>{children}</WalletNetwork>
       </MotionConfig>
     </QueryClientProvider>
   );

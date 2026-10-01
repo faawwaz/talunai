@@ -259,7 +259,7 @@ try {
       await submit(
         lender.page,
         "1. Tinjau izin token",
-        "Izinkan penggunaan MockIDR",
+        "Izinkan penggunaan IDRT uji",
       );
       await submit(
         lender.page,
@@ -288,7 +288,7 @@ try {
         await submit(
           buyer.page,
           "1. Tinjau izin token",
-          "Izinkan penggunaan MockIDR",
+          "Izinkan penggunaan IDRT uji",
         );
         await submit(buyer.page, "2. Tinjau pembayaran", "Bayar invoice");
         await waitFinance("totalCollected", total);

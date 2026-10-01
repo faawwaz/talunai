@@ -298,8 +298,16 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 export function WorkspaceShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { config, user, status, connect, logout, error, walletStatus } =
-    useSession();
+  const {
+    config,
+    user,
+    status,
+    connect,
+    manageWallet,
+    logout,
+    error,
+    walletStatus,
+  } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
@@ -436,12 +444,19 @@ export function WorkspaceShell({ children }: { children: ReactNode }) {
               <Skeleton className="h-8 w-24" />
             ) : user ? (
               <div className="topbar-account">
-                <div className="topbar-account-copy">
-                  <p className="topbar-wallet" title={user.wallet}>
-                    {shortWallet}
-                  </p>
-                  <p className="topbar-role">{role}</p>
-                </div>
+                <button
+                  type="button"
+                  className="wallet-account-button"
+                  onClick={manageWallet}
+                  aria-label={`Kelola wallet ${shortWallet}`}
+                  disabled={walletBusy || loggingOut}
+                >
+                  <Wallet aria-hidden="true" />
+                  <span className="topbar-account-copy">
+                    <span className="topbar-wallet block">{shortWallet}</span>
+                    <span className="topbar-role block">{role}</span>
+                  </span>
+                </button>
                 <Link
                   href={area ? `/${area}/settings` : "/app/settings"}
                   className="topbar-avatar"

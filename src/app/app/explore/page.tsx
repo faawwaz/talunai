@@ -179,7 +179,7 @@ function ExploreContent() {
   const initialKey = /^0x[0-9a-fA-F]{64}$/.test(requestedKey)
     ? requestedKey
     : "";
-  const { api, user, config, connect } = useSession();
+  const { api, user, config, connect, getWalletProvider } = useSession();
   const [amount, setAmount] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -402,21 +402,12 @@ function ExploreContent() {
       throw new Error(
         "Transaksi sebelumnya belum terkonfirmasi. Periksa hash transaksi sebelum mencoba lagi.",
       );
-    if (!user || !isTestnetWallet || !window.ethereum)
+    if (!user || !isTestnetWallet)
       throw new Error("Hubungkan wallet yang sesuai di BSC Testnet.");
-    const [accounts, chainId] = await Promise.all([
-      window.ethereum.request({ method: "eth_accounts" }),
-      window.ethereum.request({ method: "eth_chainId" }),
-    ]);
-    if (
-      !accounts[0] ||
-      accounts[0].toLowerCase() !== user.wallet.toLowerCase() ||
-      Number.parseInt(chainId, 16) !== 97
-    )
-      throw new Error("Akun atau jaringan wallet berubah. Sambungkan kembali.");
+    const provider = await getWalletProvider();
     const wallet = createWalletClient({
       chain: bscTestnet,
-      transport: custom(window.ethereum),
+      transport: custom(provider),
       account: user.wallet as Address,
     });
     setTransactionStatus(`${label}: konfirmasi di wallet…`);

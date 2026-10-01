@@ -68,15 +68,21 @@
     "demo:prepare": "node --env-file=.env.testnet --env-file=.env.local --env-file=.env.worker --import tsx demo/coconut-sugar/cli.ts prepare",
     "demo:run": "node --env-file=.env.testnet --env-file=.env.local --env-file=.env.worker --import tsx demo/coconut-sugar/cli.ts run",
     "demo:validate": "node --import tsx demo/coconut-sugar/cli.ts validate",
-    "demo:documents": "node --import tsx demo/coconut-sugar/cli.ts prepare --documents-only"
+    "demo:documents": "node --import tsx demo/coconut-sugar/cli.ts prepare --documents-only",
+    "test:ui:wallet": "node --env-file=.env.testnet --import tsx scripts/test-wallet-ui.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",
     "@openzeppelin/contracts": "5.0.2",
+    "@rainbow-me/rainbowkit": "2.2.11",
     "@tailwindcss/postcss": "4.3.3",
     "@tanstack/react-form": "1.33.5",
     "@tanstack/react-query": "5.104.0",
     "@tanstack/react-table": "9.2.4",
+    "@x402/core": "2.25.0",
+    "@x402/evm": "2.25.0",
+    "@x402/extensions": "2.25.0",
+    "@x402/svm": "2.25.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "drizzle-orm": "0.45.3",
@@ -93,6 +99,7 @@
     "tailwind-merge": "3.7.0",
     "tailwindcss": "4.3.3",
     "viem": "2.56.9",
+    "wagmi": "2.19.5",
     "zod": "4.6.5"
   },
   "devDependencies": {
@@ -117,6 +124,10 @@
     "node": ">=24 <25"
   },
   "overrides": {
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "ws@>=8.0.0 <8.21.0": "8.22.0",
+    "cuer": {
+      "qr": "0.5.5"
+    }
   }
 }
