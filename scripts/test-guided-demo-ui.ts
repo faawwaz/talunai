@@ -184,6 +184,15 @@ try {
           () => document.documentElement.scrollWidth <= window.innerWidth + 1,
         ),
       ).toBe(true);
+      if (width < 700) {
+        const copy = await page.locator(".demo-controls > p").boundingBox();
+        const controls = await page
+          .locator(".demo-controls > div")
+          .boundingBox();
+        expect(
+          copy && controls && copy.y + copy.height <= controls.y,
+        ).toBeTruthy();
+      }
       await page.screenshot({
         path: `${output}/${width}-${suffix}.png`,
         fullPage: true,

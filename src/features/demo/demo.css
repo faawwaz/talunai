@@ -720,8 +720,6 @@
     margin-top: 18px;
   }
   .demo-controls > div {
-    position: sticky;
-    bottom: 0;
     background: var(--background);
     padding: 10px 0;
   }
