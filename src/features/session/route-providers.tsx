@@ -12,6 +12,6 @@ const ProductProviders = dynamic(() =>
 
 export function RouteProviders({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  if (pathname === "/") return children;
+  if (pathname === "/" || pathname === "/demo") return children;
   return <ProductProviders>{children}</ProductProviders>;
 }

@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "source": "demo-artifacts/coconut-sugar/hero",
+  "executionStatus": "COMPLETED",
+  "recordedAt": "2026-09-30T14:51:45.213Z",
+  "deal": {
+    "id": "c8ea1af0-7394-49db-9e23-0ea7a5bb8036",
+    "invoiceNumber": "INV/GKN/20260930/HERO",
+    "supplier": "PT Gula Kelapa Nusantara",
+    "buyer": "PT Unilever Indonesia Tbk",
+    "product": "Gula kelapa cetak",
+    "quantity": "4000",
+    "unit": "kg",
+    "issueDate": "2026-09-30",
+    "dueDate": "2026-11-14",
+    "paymentTermDays": 45,
+    "invoiceAmount": "100000000",
+    "principal": "70000000",
+    "fee": "1050000",
+    "feeBps": 150,
+    "lenderEntitlement": "71050000",
+    "supplierResidual": "28950000",
+    "version": 5
+  },
+  "network": {
+    "chainId": 97,
+    "name": "BNB Chain Testnet",
+    "displayToken": "IDRT uji",
+    "contractToken": "MockIDR",
+    "tokenAddress": "0x96125aaad931266f1d7bacfa54e1915993ca8c4d",
+    "officialIdrtIntegrated": false
+  },
+  "documents": [
+    {
+      "title": "Invoice",
+      "url": "/demo/coconut-sugar/invoice.pdf",
+      "sha256": "27e66e814fa2d64bae51f1b40b1b9c26fe325b052b2c93eb214e22295bca63f6"
+    },
+    {
+      "title": "Bukti pengiriman",
+      "url": "/demo/coconut-sugar/delivery-note.pdf",
+      "sha256": "1203e40bdceb44d3f7df7fd53214c5380b1a2b388f10d228923ca2d32db0d85e"
+    },
+    {
+      "title": "Pengakuan buyer",
+      "url": "/demo/coconut-sugar/buyer-acknowledgement.pdf",
+      "sha256": "355d152c28aa516e5ceae83322c0bee497b1730f6528ff588bd3a20ca4002831"
+    }
+  ],
+  "agent": {
+    "runId": "ed4d7f73-f7f9-4258-ab85-eec4a1fbb636",
+    "provider": "openrouter",
+    "model": "openai/gpt-4.1",
+    "mode": "live",
+    "completedAt": "2026-09-30T12:51:42.581Z",
+    "workflow": "READY_FOR_SIGNATURES",
+    "conflicts": [],
+    "missingFields": ["goodsCategory"],
+    "checks": [
+      {
+        "label": "Nilai invoice cocok",
+        "detail": "Sesuai nilai tagihan yang diajukan.",
+        "field": "invoiceOriginalAmount",
+        "value": "100000000"
+      },
+      {
+        "label": "Pengakuan buyer ditemukan",
+        "detail": "Nilai dan jatuh tempo didukung dokumen buyer.",
+        "field": "buyerAcknowledgementReference",
+        "value": "ACK/DEMO/GKN/20260930/HERO"
+      },
+      {
+        "label": "Bukti pengiriman tersedia",
+        "detail": "Referensi penyerahan cocok dengan invoice.",
+        "field": "proofOfDeliveryReference",
+        "value": "DN/DEMO/GKN/20260930/HERO"
+      },
+      {
+        "label": "Jatuh tempo konsisten",
+        "detail": "Tanggal pada bukti sesuai ketentuan deal.",
+        "field": "invoiceDueDate",
+        "value": "2026-11-14"
+      }
+    ]
+  },
+  "review": {
+    "decision": "APPROVE",
+    "recordedAt": "2026-09-30T12:53:02.614Z",
+    "version": 5
+  },
+  "consents": [
+    {
+      "role": "BORROWER",
+      "version": 5,
+      "recordedAt": "2026-09-30T12:53:10.072Z"
+    },
+    {
+      "role": "BUYER",
+      "version": 5,
+      "recordedAt": "2026-09-30T12:53:13.637Z"
+    }
+  ],
+  "financing": {
+    "funded": {
+      "totalCollected": "0",
+      "lenderAllocated": "0",
+      "lenderClaimable": "0",
+      "lenderWithdrawn": "0",
+      "borrowerResidualClaimable": "0",
+      "borrowerWithdrawn": "0",
+      "remainingInvoiceCollection": "100000000",
+      "financingStatus": "ACTIVE",
+      "collectionStatus": "UNPAID"
+    },
+    "allocated": {
+      "totalCollected": "100000000",
+      "lenderAllocated": "71050000",
+      "lenderClaimable": "71050000",
+      "lenderWithdrawn": "0",
+      "borrowerResidualClaimable": "28950000",
+      "borrowerWithdrawn": "0",
+      "remainingInvoiceCollection": "0",
+      "financingStatus": "REPAID",
+      "collectionStatus": "FULLY_COLLECTED"
+    },
+    "completed": {
+      "totalCollected": "100000000",
+      "lenderAllocated": "71050000",
+      "lenderClaimable": "0",
+      "lenderWithdrawn": "71050000",
+      "borrowerResidualClaimable": "0",
+      "borrowerWithdrawn": "28950000",
+      "remainingInvoiceCollection": "0",
+      "financingStatus": "REPAID",
+      "collectionStatus": "FULLY_COLLECTED"
+    }
+  },
+  "transactions": {
+    "registered": {
+      "hash": "0x70d12a0c646dcd65491e04520b0668b72b61137dce8217711ff71df15b80eec1",
+      "blockNumber": "134057427",
+      "observedAt": "2026-09-30T12:53:22.179Z"
+    },
+    "funded": {
+      "hash": "0xb11a90ecd85257b475ff623b46bda45b5004733fafb3d90b7a39971746bcb106",
+      "blockNumber": "134057479",
+      "observedAt": "2026-09-30T12:53:45.580Z"
+    },
+    "paid": {
+      "hash": "0x4c1e274065b94407439ff9a4fc4fbce0a9483b92baf80a34a5aede84bf864f20",
+      "blockNumber": "134057528",
+      "observedAt": "2026-09-30T12:54:07.356Z"
+    },
+    "lender": {
+      "hash": "0xd41933e817b9eac2f8335012e9ae737b5e29d1ed768387b26c7b6cd520c340ae",
+      "blockNumber": "134057556",
+      "observedAt": "2026-09-30T12:54:20.174Z"
+    },
+    "supplier": {
+      "hash": "0x958a5a0ed93998de1d4212e50dcedda4c16a56e7f6f8b52d39f001a15970ce4d",
+      "blockNumber": "134057580",
+      "observedAt": "2026-09-30T12:54:30.713Z"
+    }
+  }
+}

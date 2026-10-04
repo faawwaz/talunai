@@ -69,7 +69,10 @@
     "demo:run": "node --env-file=.env.testnet --env-file=.env.local --env-file=.env.worker --import tsx demo/coconut-sugar/cli.ts run",
     "demo:validate": "node --import tsx demo/coconut-sugar/cli.ts validate",
     "demo:documents": "node --import tsx demo/coconut-sugar/cli.ts prepare --documents-only",
-    "test:ui:wallet": "node --env-file=.env.testnet --import tsx scripts/test-wallet-ui.ts"
+    "test:ui:wallet": "node --env-file=.env.testnet --import tsx scripts/test-wallet-ui.ts",
+    "demo:export-public": "tsx scripts/export-guided-demo.ts",
+    "test:ui:demo": "tsx scripts/test-guided-demo-ui.ts",
+    "test:demo": "vitest run src/features/demo/replay.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",

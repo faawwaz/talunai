@@ -56,13 +56,13 @@ export function LandingPage({ className }: { className: string }) {
             </p>
             <div className="landing-hero-actions">
               <AppLink />
-              <a
-                href="#cara-kerja"
+              <Link
+                href="/demo"
                 className="landing-button landing-button-secondary"
               >
-                Lihat Cara Kerja
+                Lihat Demo
                 <ArrowRight size={17} aria-hidden="true" />
-              </a>
+              </Link>
             </div>
             <div className="landing-hero-network">
               <Image
@@ -284,6 +284,7 @@ export function LandingPage({ className }: { className: string }) {
               <p>Pembiayaan invoice B2B yang lebih transparan.</p>
             </div>
             <nav aria-label="Navigasi footer">
+              <Link href="/demo">Lihat Demo</Link>
               <a href="#produk">Produk</a>
               <a href="#cara-kerja">Cara Kerja</a>
               <a href="#teknologi">Teknologi</a>
